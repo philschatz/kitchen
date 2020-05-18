@@ -1,0 +1,53 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <style>
+            :target { background-color: #ffc; }
+            /* BUG: we do not remove the original solution. */
+            [data-type="exercise"] > [data-type="solution"] { display: none; }
+        </style>
+    </head>
+    <body>
+        <section data-type="chapter" id="ch1">
+            <p>Here is some chapter content.</p>
+            <p>Lorem ipsum.</p>
+            <p>Lorem ipsum.</p>
+            <p>Lorem ipsum.</p>
+            <div data-type="exercise" id="ex-A">
+                <span>What is the meaning of life?</span>
+                <p data-type="solution" id="sol-a">42</p>
+            </div>
+
+            <div data-type="exercise" id="ex-B">
+                <span>What is the Capitol of France?</span>
+                <p data-type="solution" id="sol-b">Paris</p>
+            </div>
+
+            <div data-type="exercise" id="ex-C">
+                <span>What is the Capitol of Texas?</span>
+                <p data-type="solution" id="sol-c">Austin</p>
+            </div>
+        </section>
+
+        <section data-type="chapter" id="ch2">
+            <p>Here is some chapter content.</p>
+            <p>Lorem ipsum.</p>
+            <p>Lorem ipsum.</p>
+            <p>Lorem ipsum.</p>
+            <div data-type="exercise" id="ex-D">
+                <span>What is the life of Brian?</span>
+                <p data-type="solution" id="sol-d">Who?</p>
+            </div>
+
+            <div data-type="exercise" id="ex-E">
+                <span>What is the Capitol of Oregon?</span>
+                <p data-type="solution" id="sol-e">Eugene</p>
+            </div>
+
+            <div data-type="exercise" id="ex-F">
+                <span>What is the meaning of Texas?</span>
+                <p data-type="solution" id="sol-f">Six Flags</p>
+            </div>
+        </section>
+
+    </body>
+</html>

@@ -1,0 +1,69 @@
+<!-- ***************************************
+     
+# Example Recipe
+
+This recipe does the following:
+
+- moves the exercises to the end of the chapter
+- moves the answers to the end of the book
+- numbers each exercise and answer
+- links the answers and exercises to each other
+
+*************************************** -->
+<r:root 
+    xmlns:r="urn:replacer-xml"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://www.w3.org/1999/xhtml"
+    >
+
+    <r:replace selector="h:body">
+        <r:bucket name="solutionBucket"/>
+        <r:counter name="chapterCounter" selector="*[@data-type='chapter']"/>
+        
+        <r:this>
+            <r:children/>
+            <section>
+                <h1>Answers</h1>
+                <r:dump-bucket name="solutionBucket"/>
+            </section>
+        </r:this>
+
+        <!--Chapter-->
+        <r:replace selector="*[@data-type='chapter']">
+            <r:bucket name="exerciseBucket"/>
+            <r:counter name="exerciseCounter" selector="*[@data-type='exercise']"/>
+
+            <r:this>
+                <h2>Chapter <r:dump-counter name="chapterCounter"/></h2>
+                <r:children/>
+                <div>
+                    <h3>Homework</h3>
+                    <r:dump-bucket name="exerciseBucket"/>
+                </div>
+            </r:this>
+
+            <!--Exercise-->
+            <r:replace move-to="exerciseBucket" selector="*[@data-type='exercise']">
+                <r:link-text>
+                    <r:dump-counter name="chapterCounter"/>.<r:dump-counter name="exerciseCounter"/>
+                </r:link-text>
+
+                <r:this>
+                    <r:link to="child" selector="*[@data-type='solution']"><r:dump-counter name="chapterCounter"/>.<r:dump-counter name="exerciseCounter"/></r:link>
+                    <r:children/>
+                </r:this>
+
+                <!--Solution-->
+                <r:replace move-to="solutionBucket" selector="*[@data-type='solution']">
+                    <r:this>
+                        <r:link to="parent"/>
+                        <r:children/>
+                    </r:this>
+                </r:replace>
+
+            </r:replace>
+
+        </r:replace>
+
+    </r:replace>
+</r:root>
