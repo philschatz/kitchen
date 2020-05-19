@@ -8,6 +8,7 @@ This recipe does the following:
 - moves the answers to the end of the book
 - numbers each exercise and answer
 - links the answers and exercises to each other
+- numbers figures
 
 *************************************** -->
 <r:root 
@@ -32,6 +33,7 @@ This recipe does the following:
         <r:replace selector="*[@data-type='chapter']">
             <r:bucket name="exerciseBucket"/>
             <r:counter name="exerciseCounter" selector="*[@data-type='exercise']"/>
+            <r:counter name="figureCounter" selector="h:figure"/>
 
             <r:this>
                 <h2>Chapter <r:dump-counter name="chapterCounter"/></h2>
@@ -57,6 +59,25 @@ This recipe does the following:
                 <r:replace move-to="solutionBucket" selector="*[@data-type='solution']">
                     <r:this>
                         <r:link to="parent"/>
+                        <r:children/>
+                    </r:this>
+                </r:replace>
+
+            </r:replace>
+
+            <!--Figure-->
+            <r:replace selector="h:figure">
+
+                <r:this>
+                    <r:children/>
+                </r:this>
+
+                <!--Caption-->
+                <r:replace selector="h:figcaption">
+                    <r:this>
+                        <strong>
+                            <r:dump-counter name="chapterCounter"/>.<r:dump-counter name="figureCounter"/>
+                        </strong>
                         <r:children/>
                     </r:this>
                 </r:replace>
