@@ -207,8 +207,8 @@ XPath functions: https://www.w3.org/TR/xpath-functions-30/
     <xsl:comment>r:this</xsl:comment>
     <t:copy>
         <t:apply-templates select="@*"/>
-        <xsl:if test="../r:link-text">
-            <xsl:copy-of select="../r:link-text"/>
+        <xsl:if test="../r:declare/r:link-text">
+            <xsl:copy-of select="../r:declare/r:link-text"/>
         </xsl:if>
 
         <xsl:apply-templates select="node()"/>
@@ -261,9 +261,8 @@ XPath functions: https://www.w3.org/TR/xpath-functions-30/
     </t:accumulator>
 </xsl:template>
 
-<!-- Discard the bucket declaration. We no longer need it -->
-<xsl:template match="r:bucket"/>
-<xsl:template match="r:counter"/>
+<!-- Discard the declaration block. We no longer need it -->
+<xsl:template match="r:declare"/>
 
 <xsl:template name="build-match-with-self"><xsl:for-each select="ancestor::r:replace">//{@selector}</xsl:for-each><xsl:if test="@selector">//{@selector}</xsl:if></xsl:template>
 <xsl:template name="build-match-ancestors"><xsl:for-each select="ancestor::r:replace">//{@selector}</xsl:for-each></xsl:template>

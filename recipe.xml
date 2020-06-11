@@ -18,9 +18,11 @@ This recipe does the following:
     >
 
     <r:replace selector="h:body">
-        <r:bucket name="solutionBucket"/>
-        <r:counter name="chapterCounter" selector="*[@data-type='chapter']"/>
-        
+        <r:declare>
+            <r:bucket name="solutionBucket"/>
+            <r:counter name="chapterCounter" selector="*[@data-type='chapter']"/>
+        </r:declare>
+
         <r:this>
             <r:children/>
             <section>
@@ -31,9 +33,11 @@ This recipe does the following:
 
         <!--Chapter-->
         <r:replace selector="*[@data-type='chapter']">
-            <r:bucket name="exerciseBucket"/>
-            <r:counter name="exerciseCounter" selector="*[@data-type='exercise']"/>
-            <r:counter name="figureCounter" selector="h:figure"/>
+            <r:declare>
+                <r:bucket name="exerciseBucket"/>
+                <r:counter name="exerciseCounter" selector="*[@data-type='exercise']"/>
+                <r:counter name="figureCounter" selector="h:figure"/>
+            </r:declare>
 
             <r:this>
                 <h2>Chapter <r:dump-counter name="chapterCounter"/></h2>
@@ -46,10 +50,12 @@ This recipe does the following:
 
             <!--Exercise-->
             <r:replace move-to="exerciseBucket" selector="*[@data-type='exercise']">
-                <r:link-text>
-                    <r:dump-counter name="chapterCounter"/>.<r:dump-counter name="exerciseCounter"/>
-                </r:link-text>
-
+                <r:declare>
+                    <r:link-text>
+                        <r:dump-counter name="chapterCounter"/>.<r:dump-counter name="exerciseCounter"/>
+                    </r:link-text>
+                </r:declare>
+                
                 <r:this>
                     <r:link to="child" selector="*[@data-type='solution']"><r:dump-counter name="chapterCounter"/>.<r:dump-counter name="exerciseCounter"/></r:link>
                     <r:children/>

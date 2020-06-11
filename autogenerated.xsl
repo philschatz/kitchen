@@ -68,7 +68,7 @@
    </xsl:template>
    <xsl:template match="*[@temp:class][phil:hasClass(@temp:class, 'd1e4')]"
                  mode="EXPAND_MODE">
-        
+
         <!--r:this-->
       <xsl:copy>
          <xsl:apply-templates select="@*"/>
@@ -97,11 +97,11 @@
    </xsl:template>
    <xsl:template match="//h:body//*[@data-type='chapter']" mode="ANNOTATE_MODE">
       <xsl:copy>
-         <xsl:attribute name="temp:class">d1e24</xsl:attribute>
+         <xsl:attribute name="temp:class">d1e27</xsl:attribute>
          <xsl:apply-templates mode="ANNOTATE_MODE" select="@*|node()"/>
       </xsl:copy>
    </xsl:template>
-   <xsl:template match="*[@temp:class][phil:hasClass(@temp:class, 'd1e24')]"
+   <xsl:template match="*[@temp:class][phil:hasClass(@temp:class, 'd1e27')]"
                  mode="EXPAND_MODE">
 
             <!--r:this-->
@@ -119,7 +119,7 @@
       <!--Exercise-->
       <!--Figure-->
    </xsl:template>
-   <xsl:template match="*[@temp:class][phil:hasClass(@temp:class, 'd1e24')]"
+   <xsl:template match="*[@temp:class][phil:hasClass(@temp:class, 'd1e27')]"
                  mode="NUMBER_MODE">
       <xsl:param tunnel="yes" name="chapterCounter"/>
       <xsl:param tunnel="yes" name="exerciseCounter"/>
@@ -136,13 +136,13 @@
    <xsl:template match="//h:body//*[@data-type='chapter']//*[@data-type='exercise']"
                  mode="ANNOTATE_MODE">
       <xsl:copy>
-         <xsl:attribute name="temp:class">d1e51</xsl:attribute>
+         <xsl:attribute name="temp:class">d1e56</xsl:attribute>
          <xsl:apply-templates mode="ANNOTATE_MODE" select="@*|node()"/>
       </xsl:copy>
    </xsl:template>
-   <xsl:template match="*[@temp:class][phil:hasClass(@temp:class, 'd1e51')]"
+   <xsl:template match="*[@temp:class][phil:hasClass(@temp:class, 'd1e56')]"
                  mode="EXPAND_MODE">
-
+                
                 <!--r:this-->
       <xsl:copy>
          <xsl:apply-templates select="@*"/>
@@ -164,7 +164,7 @@
       <xsl:comment>Moved "//h:body//*[@data-type='chapter']//*[@data-type='exercise']" because it had a @move-to</xsl:comment>
       <xsl:message>Removing element //h:body//*[@data-type='chapter']//*[@data-type='exercise'] because it has a @move-to</xsl:message>
    </xsl:template>
-   <xsl:template match="*[@temp:class][phil:hasClass(@temp:class, 'd1e51')]"
+   <xsl:template match="*[@temp:class][phil:hasClass(@temp:class, 'd1e56')]"
                  mode="NUMBER_MODE">
       <xsl:param tunnel="yes" name="chapterCounter"/>
       <xsl:param tunnel="yes" name="exerciseCounter"/>
@@ -180,11 +180,11 @@
    <xsl:template match="//h:body//*[@data-type='chapter']//*[@data-type='exercise']//*[@data-type='solution']"
                  mode="ANNOTATE_MODE">
       <xsl:copy>
-         <xsl:attribute name="temp:class">d1e72</xsl:attribute>
+         <xsl:attribute name="temp:class">d1e80</xsl:attribute>
          <xsl:apply-templates mode="ANNOTATE_MODE" select="@*|node()"/>
       </xsl:copy>
    </xsl:template>
-   <xsl:template match="*[@temp:class][phil:hasClass(@temp:class, 'd1e72')]"
+   <xsl:template match="*[@temp:class][phil:hasClass(@temp:class, 'd1e80')]"
                  mode="EXPAND_MODE">
                     <!--r:this-->
       <xsl:copy>
@@ -199,7 +199,7 @@
       <xsl:comment>Moved "//h:body//*[@data-type='chapter']//*[@data-type='exercise']//*[@data-type='solution']" because it had a @move-to</xsl:comment>
       <xsl:message>Removing element //h:body//*[@data-type='chapter']//*[@data-type='exercise']//*[@data-type='solution'] because it has a @move-to</xsl:message>
    </xsl:template>
-   <xsl:template match="*[@temp:class][phil:hasClass(@temp:class, 'd1e72')]"
+   <xsl:template match="*[@temp:class][phil:hasClass(@temp:class, 'd1e80')]"
                  mode="NUMBER_MODE">
       <xsl:copy>
          <xsl:apply-templates mode="NUMBER_MODE" select="@*"/>
@@ -213,11 +213,11 @@
    <xsl:template match="//h:body//*[@data-type='chapter']//h:figure"
                  mode="ANNOTATE_MODE">
       <xsl:copy>
-         <xsl:attribute name="temp:class">d1e85</xsl:attribute>
+         <xsl:attribute name="temp:class">d1e94</xsl:attribute>
          <xsl:apply-templates mode="ANNOTATE_MODE" select="@*|node()"/>
       </xsl:copy>
    </xsl:template>
-   <xsl:template match="*[@temp:class][phil:hasClass(@temp:class, 'd1e85')]"
+   <xsl:template match="*[@temp:class][phil:hasClass(@temp:class, 'd1e94')]"
                  mode="EXPAND_MODE">
 
                 <!--r:this-->
@@ -228,7 +228,7 @@
       </xsl:copy>
       <!--Caption-->
    </xsl:template>
-   <xsl:template match="*[@temp:class][phil:hasClass(@temp:class, 'd1e85')]"
+   <xsl:template match="*[@temp:class][phil:hasClass(@temp:class, 'd1e94')]"
                  mode="NUMBER_MODE">
       <xsl:param tunnel="yes" name="chapterCounter"/>
       <xsl:param tunnel="yes" name="figureCounter"/>
@@ -244,11 +244,11 @@
    <xsl:template match="//h:body//*[@data-type='chapter']//h:figure//h:figcaption"
                  mode="ANNOTATE_MODE">
       <xsl:copy>
-         <xsl:attribute name="temp:class">d1e94</xsl:attribute>
+         <xsl:attribute name="temp:class">d1e103</xsl:attribute>
          <xsl:apply-templates mode="ANNOTATE_MODE" select="@*|node()"/>
       </xsl:copy>
    </xsl:template>
-   <xsl:template match="*[@temp:class][phil:hasClass(@temp:class, 'd1e94')]"
+   <xsl:template match="*[@temp:class][phil:hasClass(@temp:class, 'd1e103')]"
                  mode="EXPAND_MODE">
                     <!--r:this-->
       <xsl:copy>
@@ -260,7 +260,7 @@
          <xsl:apply-templates mode="EXPAND_MODE" select="node()"/>
       </xsl:copy>
    </xsl:template>
-   <xsl:template match="*[@temp:class][phil:hasClass(@temp:class, 'd1e94')]"
+   <xsl:template match="*[@temp:class][phil:hasClass(@temp:class, 'd1e103')]"
                  mode="NUMBER_MODE">
       <xsl:param tunnel="yes" name="chapterCounter"/>
       <xsl:param tunnel="yes" name="figureCounter"/>
