@@ -12,6 +12,7 @@
                exclude-result-prefixes="r xs fn phil temp">
    <xsl:output method="xhtml" html-version="5"/>
    <xsl:mode use-accumulators="#all"/>
+   <xsl:key name="link-target" match="*" use="@id"/>
    <xsl:key name="internal-id" match="*" use="@temp:id"/>
    <xsl:key name="internal-parent" match="*" use="@temp:parent"/>
    <xsl:accumulator name="solutionBucket" initial-value="()">
@@ -329,6 +330,17 @@
    </xsl:template>
    <xsl:template match="r:dump-bucket" mode="MOVE_MODE">
       <xsl:sequence select="accumulator-after(@name)"/>
+   </xsl:template>
+   <xsl:template match="h:a[starts-with(@href, '#')]" mode="LINK_MODE">
+      <xsl:variable name="targetId" select="substring-after(@href, '#')"/>
+      <xsl:variable name="target" select="key('link-target', $targetId)"/>
+      <xsl:if test="not($target)">
+         <xsl:message terminate="yes">BUG: Could not find link target with id="{$targetId}"</xsl:message>
+      </xsl:if>
+      <xsl:copy>
+         <xsl:apply-templates mode="LINK_MODE" select="@*"/>
+         <xsl:value-of select="$target[1]/@temp:linktext"/>
+      </xsl:copy>
    </xsl:template>
    <xsl:template match="r:link[@to='parent']" mode="LINK_MODE">
       <xsl:variable name="parent"

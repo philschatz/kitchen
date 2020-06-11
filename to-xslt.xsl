@@ -35,6 +35,7 @@ XPath functions: https://www.w3.org/TR/xpath-functions-30/
     <t:transform expand-text="yes" version="3.0" exclude-result-prefixes="r xs fn phil temp">
         <t:output method="xhtml" html-version="5"/>
         <t:mode use-accumulators="#all"/>
+        <t:key name="link-target" match="*" use="@id"/>
         <t:key name="internal-id" match="*" use="@temp:id"/>
         <t:key name="internal-parent" match="*" use="@temp:parent"/>
 
@@ -84,6 +85,19 @@ XPath functions: https://www.w3.org/TR/xpath-functions-30/
 
         <t:template match="r:dump-bucket" mode="MOVE_MODE">
             <t:sequence select="accumulator-after(@name)"/>
+        </t:template>
+
+        <!-- When linking internally look up the link-text of the target element -->
+        <t:template match="h:a[starts-with(@href, '#')]" mode="LINK_MODE">
+            <t:variable name="targetId" select="substring-after(@href, '#')"/>
+            <t:variable name="target" select="key('link-target', $targetId)"/>
+            <t:if test="not($target)">
+                <t:message terminate="yes">BUG: Could not find link target with id="{{$targetId}}"</t:message>
+            </t:if>
+            <t:copy>
+                <t:apply-templates mode="LINK_MODE" select="@*"/>
+                <t:value-of select="$target[1]/@temp:linktext"/>
+            </t:copy>
         </t:template>
 
         <t:template match="r:link[@to='parent']" mode="LINK_MODE">
