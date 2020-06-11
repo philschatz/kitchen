@@ -329,7 +329,11 @@
       <xsl:value-of select="accumulator-after(@name)"/>
    </xsl:template>
    <xsl:template mode="MOVE_MODE" match="r:dump-bucket">
-      <xsl:sequence select="accumulator-after(@name)"/>
+      <xsl:for-each select="accumulator-after(@name)">
+         <xsl:copy>
+            <xsl:apply-templates mode="MOVE_MODE" select="@*|node()"/>
+         </xsl:copy>
+      </xsl:for-each>
    </xsl:template>
    <xsl:template mode="LINK_MODE" match="h:a[starts-with(@href, '#')]">
       <xsl:variable name="targetId" select="substring-after(@href, '#')"/>

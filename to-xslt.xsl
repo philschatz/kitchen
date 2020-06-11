@@ -48,6 +48,7 @@ XPath functions: https://www.w3.org/TR/xpath-functions-30/
             <t:variable name="link"><t:apply-templates mode="LINK_MODE" select="$number"/></t:variable>
             <t:variable name="cleanup"><t:apply-templates mode="CLEANUP_MODE" select="$link"/></t:variable>
             <t:sequence select="$cleanup"/>
+            <!-- <t:sequence select="$move"/> -->
         </t:template>
 
         <!-- Recurse -->
@@ -81,7 +82,13 @@ XPath functions: https://www.w3.org/TR/xpath-functions-30/
         </t:template>
 
         <t:template mode="MOVE_MODE" match="r:dump-bucket">
-            <t:sequence select="accumulator-after(@name)"/>
+            <t:for-each select="accumulator-after(@name)">
+                <!-- Ensure that the element is actually copied (not removed because it was moved). 
+                     But ensure that the children are removed if they were also moved -->
+                <t:copy>
+                    <t:apply-templates mode="MOVE_MODE" select="@*|node()"/>
+                </t:copy>
+            </t:for-each>
         </t:template>
 
         <!-- When linking internally look up the link-text of the target element -->
