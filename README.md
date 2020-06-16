@@ -16,13 +16,14 @@ Each replacer has a selector that matches content and contains 3 sections within
     - [x] recipe-defined content at the beginning or end of a matched element (e.g. "Review Questions")
     - [x] counter values (e.g. "4.3")
     - [x] link text defined by the target element (e.g. "See Table 3.27")
+    - [x] link text that contains text within the target element (e.g. "See 4.3 Kinematics in Two Dimensions")
 - [x] move
     - [x] elements (Exercises)
     - [x] elements inside elements that are moved (Exercise Answers)
 - [x] link
     - [x] to the parent (an Answer links to its Exercise)
     - [x] to a child (an Exercise links to its Answer)
-    - [x] to the href target 
+    - [x] to the href target
 - [x] group exercises by section
 - [ ] update the ToC with links to new sections
 - [ ] Index-generation

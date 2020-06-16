@@ -4,11 +4,16 @@
 
 This recipe does the following:
 
+- numbers the chapter and each section
 - moves the exercises to the end of the chapter
 - moves the answers to the end of the book
 - numbers each exercise and answer
 - links the answers and exercises to each other
+    - the exercise DOES NOT contain the chapter number
+    - the answer DOES contain the chapter number
 - numbers figures
+- groups exercises by which section they came from
+    - each title links back to the section
 
 *************************************** -->
 <r:root 
@@ -35,6 +40,7 @@ This recipe does the following:
         <r:replace selector="*[@data-type='chapter']">
             <r:declare>
                 <r:bucket name="exerciseBucket"/>
+                <r:counter name="sectionCounter" selector="*[@data-type='page']"/>
                 <r:counter name="exerciseCounter" selector="*[@data-type='exercise']"/>
                 <r:counter name="figureCounter" selector="h:figure"/>
             </r:declare>
@@ -57,7 +63,7 @@ This recipe does the following:
                 </r:declare>
                 
                 <r:this>
-                    <r:link to="child" selector="*[@data-type='solution']"><r:dump-counter name="chapterCounter"/>.<r:dump-counter name="exerciseCounter"/></r:link>
+                    <r:link to="child" selector="*[@data-type='solution']"><r:dump-counter name="exerciseCounter"/></r:link>
                     <r:children/>
                 </r:this>
 
@@ -88,6 +94,28 @@ This recipe does the following:
                     </r:this>
                 </r:replace>
 
+            </r:replace>
+
+            <!--Section-->
+            <r:replace selector="*[@data-type='page']">
+                <r:declare>
+                    <r:link-text>
+                        <!--TODO: Maybe copy-content should somehow squirrel away the original content instead of the expanded content-->
+                        <!-- <r:dump-counter name="chapterCounter"/>.<r:dump-counter name="sectionCounter"/>:  -->
+                        <r:copy-content selector="./*[@data-type='document-title']/node()"/>
+                    </r:link-text>
+                </r:declare>
+                
+                <r:this>
+                    <r:children/>
+                </r:this>
+
+                <!-- Add the section number to the title -->
+                <r:replace selector="*[@data-type='document-title']">
+                    <r:this>
+                        <r:dump-counter name="chapterCounter"/>.<r:dump-counter name="sectionCounter"/>: <r:children/>
+                    </r:this>
+                </r:replace>
             </r:replace>
 
         </r:replace>

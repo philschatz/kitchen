@@ -39,7 +39,8 @@ XPath functions: https://www.w3.org/TR/xpath-functions-30/
             ===============================
             Explanation of the modes; they run in order:
             INITIALIZE_MODE: adds a unique @temp:id and @temp:parent to each element to support  r:link to="child"
-            ANNOTATE_MODE: adds a unique @temp:replace-id to each element that is matched (maybe this can be combined with INITIALIZE_MODE
+            ANNOTATE_MODE: adds a unique @temp:replace-id to each element that is matched because the element may move so the selector will no longer apply
+                (maybe this can be combined with INITIALIZE_MODE)
             EXPAND_MODE: replaces the current element with the elements defined in r:replace but does not evaluate any of the dump-counter or dump-bucket.
             MOVE_MODE: dumps the elements in the buckets out so they are now in the content
             NUMBER_MODE: dumps the counters out (which result in things being counted) and stores the target link text for an element (e.g. "Figure 4.3")
@@ -152,7 +153,11 @@ XPath functions: https://www.w3.org/TR/xpath-functions-30/
         <!-- The children of this node are matches explicitly -->
         <t:template mode="NUMBER_MODE" match="r:link-text"/>
 
+        <!-- Do not copy comments into the link text. The comment will just show up as plain text in the link which is weird -->
+        <t:template mode="NUMBER_MODE" match="r:link-text//comment()"/>
+
         <xsl:apply-templates mode="DECLARE_DUMPSITES" select=".//r:dump-bucket"/>
+        <xsl:apply-templates mode="DECLARE_DUMPSITES" select=".//r:copy-content"/>
 
         <!-- <t:function name="temp:hasClass" as="xs:boolean">
             <t:param name="class" as="xs:string"/>
@@ -220,7 +225,9 @@ XPath functions: https://www.w3.org/TR/xpath-functions-30/
         <t:copy>
             <t:apply-templates mode="NUMBER_MODE" select="@*"/>
             <t:attribute name="temp:linktext">
-                <t:apply-templates mode="NUMBER_MODE" select="r:link-text/node()"/>
+                <t:apply-templates mode="NUMBER_MODE" select="r:link-text/node()">
+                    <t:with-param tunnel="yes" name="nearestReplacerContext" select="."/>
+                </t:apply-templates>
             </t:attribute>
 
             <xsl:call-template name="applyChildren">
@@ -243,7 +250,9 @@ XPath functions: https://www.w3.org/TR/xpath-functions-30/
     <t:copy>
         <t:apply-templates select="@*"/>
         <xsl:if test="../r:declare/r:link-text">
-            <xsl:copy-of select="../r:declare/r:link-text"/>
+            <r:link-text>
+                <xsl:apply-templates select="../r:declare/r:link-text/node()"/>
+            </r:link-text>
         </xsl:if>
 
         <xsl:apply-templates select="node()"/>
@@ -263,6 +272,21 @@ XPath functions: https://www.w3.org/TR/xpath-functions-30/
 
 
 <xsl:template match="r:link-text"/>
+
+<xsl:template match="r:copy-content">
+    <xsl:variable name="id" select="generate-id()"/>
+    <xsl:copy>
+        <xsl:attribute name="temp:id">COPY_CONTENT_{@name}_{$id}</xsl:attribute>
+        <xsl:apply-templates select="@*|node()"/>
+    </xsl:copy>
+</xsl:template>
+<xsl:template mode="DECLARE_DUMPSITES" match="r:copy-content">
+    <xsl:variable name="id" select="generate-id()"/>
+    <t:template mode="NUMBER_MODE" match="r:copy-content[@temp:id='COPY_CONTENT_{@name}_{$id}']">
+        <t:param tunnel="yes" name="nearestReplacerContext" as="element()"/>
+        <t:apply-templates mode="NUMBER_MODE" select="$nearestReplacerContext/{@selector}"/>
+    </t:template>
+</xsl:template>
 
 <xsl:template match="r:dump-bucket">
     <xsl:variable name="id" select="generate-id()"/>
@@ -295,7 +319,7 @@ XPath functions: https://www.w3.org/TR/xpath-functions-30/
             <t:variable name="groupEl" select="."/>
             <t:variable name="title" select="{@group-by-title}"/>
             <h:div class="-i-am-a-group-by-block">
-                <h:h3>{{$title}}</h:h3>
+                <h:h3><h:a href="#{{$groupEl/@id}}">[this-will-be-replaced-with-autogen-linktext]</h:a></h:h3>
 
                 <t:for-each select="accumulator-after('{@name}')">
                     <t:variable name="nearestGroupEl" select="ancestor::{@group-by}"/>

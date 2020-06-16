@@ -16,9 +16,10 @@
    <xsl:key name="internal-parent" match="*" use="@temp:parent"/>
    <!--
             ===============================
-            Explanation of the modes:
+            Explanation of the modes; they run in order:
             INITIALIZE_MODE: adds a unique @temp:id and @temp:parent to each element to support  r:link to="child"
-            ANNOTATE_MODE: adds a unique @temp:replace-id to each element that is matched (maybe this can be combined with INITIALIZE_MODE
+            ANNOTATE_MODE: adds a unique @temp:replace-id to each element that is matched because the element may move so the selector will no longer apply
+                (maybe this can be combined with INITIALIZE_MODE)
             EXPAND_MODE: replaces the current element with the elements defined in r:replace but does not evaluate any of the dump-counter or dump-bucket.
             MOVE_MODE: dumps the elements in the buckets out so they are now in the content
             NUMBER_MODE: dumps the counters out (which result in things being counted) and stores the target link text for an element (e.g. "Figure 4.3")
@@ -64,6 +65,10 @@
       <xsl:accumulator-rule match="//h:body" select="0"/>
       <xsl:accumulator-rule match="*[@data-type='chapter']" select="$value + 1"/>
    </xsl:accumulator>
+   <xsl:accumulator name="sectionCounter" initial-value="0">
+      <xsl:accumulator-rule match="//h:body//*[@data-type='chapter']" select="0"/>
+      <xsl:accumulator-rule match="*[@data-type='page']" select="$value + 1"/>
+   </xsl:accumulator>
    <xsl:accumulator name="exerciseCounter" initial-value="0">
       <xsl:accumulator-rule match="//h:body//*[@data-type='chapter']" select="0"/>
       <xsl:accumulator-rule match="*[@data-type='exercise']" select="$value + 1"/>
@@ -106,10 +111,13 @@
       <xsl:param tunnel="yes" name="chapterCounter"/>
       <xsl:param tunnel="yes" name="exerciseCounter"/>
       <xsl:param tunnel="yes" name="figureCounter"/>
+      <xsl:param tunnel="yes" name="sectionCounter"/>
       <xsl:copy>
          <xsl:apply-templates mode="NUMBER_MODE" select="@*"/>
          <xsl:attribute name="temp:linktext">
-            <xsl:apply-templates mode="NUMBER_MODE" select="r:link-text/node()"/>
+            <xsl:apply-templates mode="NUMBER_MODE" select="r:link-text/node()">
+               <xsl:with-param tunnel="yes" name="nearestReplacerContext" select="."/>
+            </xsl:apply-templates>
          </xsl:attribute>
          <!--r:children-->
          <xsl:apply-templates mode="NUMBER_MODE" select="node()"/>
@@ -134,7 +142,7 @@
          <xsl:apply-templates mode="EXPAND_MODE" select="node()"/>
          <div xmlns="http://www.w3.org/1999/xhtml">
             <h2>Homework</h2>
-            <r:dump-bucket temp:id="DUMP_BUCKET_exerciseBucket_d1e50"
+            <r:dump-bucket temp:id="DUMP_BUCKET_exerciseBucket_d1e52"
                            name="exerciseBucket"
                            group-by="*[@data-type='page']"
                            group-by-title="./*[@data-type='document-title']"/>
@@ -142,6 +150,7 @@
       </xsl:copy>
       <!--Exercise-->
       <!--Figure-->
+      <!--Section-->
    </xsl:template>
    <xsl:template mode="MOVE_MODE" match="//h:body//*[@data-type='chapter']">
       <xsl:copy>
@@ -155,10 +164,13 @@
       <xsl:param tunnel="yes" name="chapterCounter"/>
       <xsl:param tunnel="yes" name="exerciseCounter"/>
       <xsl:param tunnel="yes" name="figureCounter"/>
+      <xsl:param tunnel="yes" name="sectionCounter"/>
       <xsl:copy>
          <xsl:apply-templates mode="NUMBER_MODE" select="@*"/>
          <xsl:attribute name="temp:linktext">
-            <xsl:apply-templates mode="NUMBER_MODE" select="r:link-text/node()"/>
+            <xsl:apply-templates mode="NUMBER_MODE" select="r:link-text/node()">
+               <xsl:with-param tunnel="yes" name="nearestReplacerContext" select="."/>
+            </xsl:apply-templates>
          </xsl:attribute>
          <!--r:children-->
          <xsl:apply-templates mode="NUMBER_MODE" select="node()"/>
@@ -167,24 +179,24 @@
    <xsl:template mode="ANNOTATE_MODE"
                  match="//h:body//*[@data-type='chapter']//*[@data-type='exercise']">
       <xsl:copy>
-         <xsl:attribute name="temp:replace-id">d1e56</xsl:attribute>
+         <xsl:attribute name="temp:replace-id">d1e58</xsl:attribute>
          <xsl:apply-templates mode="ANNOTATE_MODE" select="@*|node()"/>
       </xsl:copy>
    </xsl:template>
-   <!--@temp:replace-id='d1e56' is actually: //h:body//*[@data-type='chapter']//*[@data-type='exercise']-->
+   <!--@temp:replace-id='d1e58' is actually: //h:body//*[@data-type='chapter']//*[@data-type='exercise']-->
    <xsl:template mode="EXPAND_MODE"
-                 match="*[@temp:replace-id][@temp:replace-id = 'd1e56']">
+                 match="*[@temp:replace-id][@temp:replace-id = 'd1e58']">
                 
                 <!--r:this-->
       <xsl:copy>
          <xsl:apply-templates select="@*"/>
-         <r:link-text xmlns="http://www.w3.org/1999/xhtml">
-            <r:dump-counter name="chapterCounter"/>.<r:dump-counter name="exerciseCounter"/>
+         <r:link-text>
+            <r:dump-counter xmlns="http://www.w3.org/1999/xhtml" name="chapterCounter"/>.<r:dump-counter xmlns="http://www.w3.org/1999/xhtml" name="exerciseCounter"/>
          </r:link-text>
          <r:link xmlns="http://www.w3.org/1999/xhtml"
                  to="child"
                  temp:child-link-key="*[@data-type=#solution#]">
-            <r:dump-counter name="chapterCounter"/>.<r:dump-counter name="exerciseCounter"/>
+            <r:dump-counter name="exerciseCounter"/>
          </r:link>
          <!--r:children-->
          <xsl:apply-templates mode="EXPAND_MODE" select="node()"/>
@@ -197,13 +209,15 @@
       <xsl:message>Removing element //h:body//*[@data-type='chapter']//*[@data-type='exercise'] because it has a @move-to</xsl:message>
    </xsl:template>
    <xsl:template mode="NUMBER_MODE"
-                 match="*[@temp:replace-id][@temp:replace-id = 'd1e56']">
+                 match="*[@temp:replace-id][@temp:replace-id = 'd1e58']">
       <xsl:param tunnel="yes" name="chapterCounter"/>
       <xsl:param tunnel="yes" name="exerciseCounter"/>
       <xsl:copy>
          <xsl:apply-templates mode="NUMBER_MODE" select="@*"/>
          <xsl:attribute name="temp:linktext">
-            <xsl:apply-templates mode="NUMBER_MODE" select="r:link-text/node()"/>
+            <xsl:apply-templates mode="NUMBER_MODE" select="r:link-text/node()">
+               <xsl:with-param tunnel="yes" name="nearestReplacerContext" select="."/>
+            </xsl:apply-templates>
          </xsl:attribute>
          <!--r:children-->
          <xsl:apply-templates mode="NUMBER_MODE" select="node()"/>
@@ -237,7 +251,9 @@
       <xsl:copy>
          <xsl:apply-templates mode="NUMBER_MODE" select="@*"/>
          <xsl:attribute name="temp:linktext">
-            <xsl:apply-templates mode="NUMBER_MODE" select="r:link-text/node()"/>
+            <xsl:apply-templates mode="NUMBER_MODE" select="r:link-text/node()">
+               <xsl:with-param tunnel="yes" name="nearestReplacerContext" select="."/>
+            </xsl:apply-templates>
          </xsl:attribute>
          <!--r:children-->
          <xsl:apply-templates mode="NUMBER_MODE" select="node()"/>
@@ -276,7 +292,9 @@
       <xsl:copy>
          <xsl:apply-templates mode="NUMBER_MODE" select="@*"/>
          <xsl:attribute name="temp:linktext">
-            <xsl:apply-templates mode="NUMBER_MODE" select="r:link-text/node()"/>
+            <xsl:apply-templates mode="NUMBER_MODE" select="r:link-text/node()">
+               <xsl:with-param tunnel="yes" name="nearestReplacerContext" select="."/>
+            </xsl:apply-templates>
          </xsl:attribute>
          <!--r:children-->
          <xsl:apply-templates mode="NUMBER_MODE" select="node()"/>
@@ -317,7 +335,97 @@
       <xsl:copy>
          <xsl:apply-templates mode="NUMBER_MODE" select="@*"/>
          <xsl:attribute name="temp:linktext">
-            <xsl:apply-templates mode="NUMBER_MODE" select="r:link-text/node()"/>
+            <xsl:apply-templates mode="NUMBER_MODE" select="r:link-text/node()">
+               <xsl:with-param tunnel="yes" name="nearestReplacerContext" select="."/>
+            </xsl:apply-templates>
+         </xsl:attribute>
+         <!--r:children-->
+         <xsl:apply-templates mode="NUMBER_MODE" select="node()"/>
+      </xsl:copy>
+   </xsl:template>
+   <xsl:template mode="ANNOTATE_MODE"
+                 match="//h:body//*[@data-type='chapter']//*[@data-type='page']">
+      <xsl:copy>
+         <xsl:attribute name="temp:replace-id">d1e121</xsl:attribute>
+         <xsl:apply-templates mode="ANNOTATE_MODE" select="@*|node()"/>
+      </xsl:copy>
+   </xsl:template>
+   <!--@temp:replace-id='d1e121' is actually: //h:body//*[@data-type='chapter']//*[@data-type='page']-->
+   <xsl:template mode="EXPAND_MODE"
+                 match="*[@temp:replace-id][@temp:replace-id = 'd1e121']">
+                
+                <!--r:this-->
+      <xsl:copy>
+         <xsl:apply-templates select="@*"/>
+         <r:link-text>
+                        <!--TODO: Maybe copy-content should somehow squirrel away the original content instead of the expanded content-->
+                        <!-- <r:dump-counter name="chapterCounter"/>.<r:dump-counter name="sectionCounter"/>:  -->
+            <r:copy-content xmlns="http://www.w3.org/1999/xhtml"
+                            temp:id="COPY_CONTENT__d1e131"
+                            selector="./*[@data-type='document-title']/node()"/>
+         </r:link-text>
+         <!--r:children-->
+         <xsl:apply-templates mode="EXPAND_MODE" select="node()"/>
+      </xsl:copy>
+      <!-- Add the section number to the title -->
+   </xsl:template>
+   <xsl:template mode="MOVE_MODE"
+                 match="//h:body//*[@data-type='chapter']//*[@data-type='page']">
+      <xsl:copy>
+         <xsl:apply-templates mode="MOVE_MODE" select="@*|node()">
+            <xsl:with-param tunnel="yes" name="nearestReplacerContext" select="."/>
+         </xsl:apply-templates>
+      </xsl:copy>
+   </xsl:template>
+   <xsl:template mode="NUMBER_MODE"
+                 match="*[@temp:replace-id][@temp:replace-id = 'd1e121']">
+      <xsl:param tunnel="yes" name="chapterCounter"/>
+      <xsl:param tunnel="yes" name="sectionCounter"/>
+      <xsl:copy>
+         <xsl:apply-templates mode="NUMBER_MODE" select="@*"/>
+         <xsl:attribute name="temp:linktext">
+            <xsl:apply-templates mode="NUMBER_MODE" select="r:link-text/node()">
+               <xsl:with-param tunnel="yes" name="nearestReplacerContext" select="."/>
+            </xsl:apply-templates>
+         </xsl:attribute>
+         <!--r:children-->
+         <xsl:apply-templates mode="NUMBER_MODE" select="node()"/>
+      </xsl:copy>
+   </xsl:template>
+   <xsl:template mode="ANNOTATE_MODE"
+                 match="//h:body//*[@data-type='chapter']//*[@data-type='page']//*[@data-type='document-title']">
+      <xsl:copy>
+         <xsl:attribute name="temp:replace-id">d1e142</xsl:attribute>
+         <xsl:apply-templates mode="ANNOTATE_MODE" select="@*|node()"/>
+      </xsl:copy>
+   </xsl:template>
+   <!--@temp:replace-id='d1e142' is actually: //h:body//*[@data-type='chapter']//*[@data-type='page']//*[@data-type='document-title']-->
+   <xsl:template mode="EXPAND_MODE"
+                 match="*[@temp:replace-id][@temp:replace-id = 'd1e142']">
+                    <!--r:this-->
+      <xsl:copy>
+         <xsl:apply-templates select="@*"/>
+         <r:dump-counter xmlns="http://www.w3.org/1999/xhtml" name="chapterCounter"/>.<r:dump-counter xmlns="http://www.w3.org/1999/xhtml" name="sectionCounter"/>: <!--r:children--><xsl:apply-templates mode="EXPAND_MODE" select="node()"/>
+      </xsl:copy>
+   </xsl:template>
+   <xsl:template mode="MOVE_MODE"
+                 match="//h:body//*[@data-type='chapter']//*[@data-type='page']//*[@data-type='document-title']">
+      <xsl:copy>
+         <xsl:apply-templates mode="MOVE_MODE" select="@*|node()">
+            <xsl:with-param tunnel="yes" name="nearestReplacerContext" select="."/>
+         </xsl:apply-templates>
+      </xsl:copy>
+   </xsl:template>
+   <xsl:template mode="NUMBER_MODE"
+                 match="*[@temp:replace-id][@temp:replace-id = 'd1e142']">
+      <xsl:param tunnel="yes" name="chapterCounter"/>
+      <xsl:param tunnel="yes" name="sectionCounter"/>
+      <xsl:copy>
+         <xsl:apply-templates mode="NUMBER_MODE" select="@*"/>
+         <xsl:attribute name="temp:linktext">
+            <xsl:apply-templates mode="NUMBER_MODE" select="r:link-text/node()">
+               <xsl:with-param tunnel="yes" name="nearestReplacerContext" select="."/>
+            </xsl:apply-templates>
          </xsl:attribute>
          <!--r:children-->
          <xsl:apply-templates mode="NUMBER_MODE" select="node()"/>
@@ -430,6 +538,7 @@
       </h:a>
    </xsl:template>
    <xsl:template mode="NUMBER_MODE" match="r:link-text"/>
+   <xsl:template mode="NUMBER_MODE" match="r:link-text//comment()"/>
    <xsl:template mode="MOVE_MODE"
                  match="r:dump-bucket[@temp:id='DUMP_BUCKET_solutionBucket_d1e21']">
       <xsl:comment> r:dump-bucket[@name='solutionBucket'][not(@group-by)] DUMP_BUCKET_solutionBucket_d1e21</xsl:comment>
@@ -440,14 +549,16 @@
       </xsl:for-each>
    </xsl:template>
    <xsl:template mode="MOVE_MODE"
-                 match="r:dump-bucket[@temp:id='DUMP_BUCKET_exerciseBucket_d1e50']">
+                 match="r:dump-bucket[@temp:id='DUMP_BUCKET_exerciseBucket_d1e52']">
       <xsl:param tunnel="yes" name="nearestReplacerContext" as="element()"/>
-      <xsl:comment> DUMP_BUCKET_exerciseBucket_d1e50 . nearestReplacerContext={$nearestReplacerContext/@data-type} Found {count($nearestReplacerContext/*[@data-type='page'])} groups to loop over</xsl:comment>
+      <xsl:comment> DUMP_BUCKET_exerciseBucket_d1e52 . Found {count($nearestReplacerContext/*[@data-type='page'])} groups to loop over</xsl:comment>
       <xsl:for-each select="$nearestReplacerContext/*[@data-type='page']">
          <xsl:variable name="groupEl" select="."/>
          <xsl:variable name="title" select="./*[@data-type='document-title']"/>
          <h:div class="-i-am-a-group-by-block">
-            <h:h3>{$title}</h:h3>
+            <h:h3>
+               <h:a href="#{$groupEl/@id}">[this-will-be-replaced-with-autogen-linktext]</h:a>
+            </h:h3>
             <xsl:for-each select="accumulator-after('exerciseBucket')">
                <xsl:variable name="nearestGroupEl" select="ancestor::*[@data-type='page']"/>
                <xsl:if test="$groupEl[1] = $nearestGroupEl[1]">
@@ -458,5 +569,11 @@
             </xsl:for-each>
          </h:div>
       </xsl:for-each>
+   </xsl:template>
+   <xsl:template mode="NUMBER_MODE"
+                 match="r:copy-content[@temp:id='COPY_CONTENT__d1e131']">
+      <xsl:param tunnel="yes" name="nearestReplacerContext" as="element()"/>
+      <xsl:apply-templates mode="NUMBER_MODE"
+                           select="$nearestReplacerContext/./*[@data-type='document-title']/node()"/>
    </xsl:template>
 </xsl:transform>
