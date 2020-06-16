@@ -14,7 +14,6 @@ XPath functions: https://www.w3.org/TR/xpath-functions-30/
     xmlns:fn="http://www.w3.org/2005/xpath-functions"
     xmlns:h="http://www.w3.org/1999/xhtml"
     xmlns:r="urn:replacer-xml"
-    xmlns:phil="https://philschatz.com"
     xmlns:temp="urn:temp-placeholder-element"
     expand-text="yes"
     version="3.0">
@@ -29,7 +28,7 @@ XPath functions: https://www.w3.org/TR/xpath-functions-30/
 </xsl:template>
 
 <xsl:template match="r:root">
-    <t:transform expand-text="yes" version="3.0" exclude-result-prefixes="r xs fn phil temp">
+    <t:transform expand-text="yes" version="3.0" exclude-result-prefixes="r xs fn temp">
         <t:output method="xhtml" html-version="5"/>
         <t:mode use-accumulators="#all"/>
         <t:key name="link-target" match="*" use="@id"/>
@@ -40,15 +39,14 @@ XPath functions: https://www.w3.org/TR/xpath-functions-30/
         <xsl:apply-templates mode="ACCUMULATORS_MODE" select="//r:counter"/>
 
         <t:template match="/">
-            <t:variable name="init"><t:apply-templates mode="INITIALIZE_MODE" select="@*|node()"/></t:variable>
-            <t:variable name="annotate"><t:apply-templates mode="ANNOTATE_MODE" select="$init"/></t:variable>
-            <t:variable name="expand"><t:apply-templates mode="EXPAND_MODE" select="$annotate"/></t:variable>
-            <t:variable name="move"><t:apply-templates mode="MOVE_MODE" select="$expand"/></t:variable>
-            <t:variable name="number"><t:apply-templates mode="NUMBER_MODE" select="$move"/></t:variable>
-            <t:variable name="link"><t:apply-templates mode="LINK_MODE" select="$number"/></t:variable>
-            <t:variable name="cleanup"><t:apply-templates mode="CLEANUP_MODE" select="$link"/></t:variable>
-            <t:sequence select="$cleanup"/>
-            <!-- <t:sequence select="$move"/> -->
+            <t:variable name="pipe"><t:apply-templates mode="INITIALIZE_MODE" select="@*|node()"/></t:variable>
+            <t:variable name="pipe"><t:apply-templates mode="ANNOTATE_MODE" select="$pipe"/></t:variable>
+            <t:variable name="pipe"><t:apply-templates mode="EXPAND_MODE" select="$pipe"/></t:variable>
+            <t:variable name="pipe"><t:apply-templates mode="MOVE_MODE" select="$pipe"/></t:variable>
+            <t:variable name="pipe"><t:apply-templates mode="NUMBER_MODE" select="$pipe"/></t:variable>
+            <t:variable name="pipe"><t:apply-templates mode="LINK_MODE" select="$pipe"/></t:variable>
+            <t:variable name="pipe"><t:apply-templates mode="CLEANUP_MODE" select="$pipe"/></t:variable>
+            <t:sequence select="$pipe"/>
         </t:template>
 
         <!-- Recurse -->
@@ -74,21 +72,11 @@ XPath functions: https://www.w3.org/TR/xpath-functions-30/
         <t:template mode="CLEANUP_MODE" match="@*|node()"><t:copy><t:apply-templates mode="CLEANUP_MODE" select="@*|node()"/></t:copy></t:template>
 
         <!-- Remove temporary attributes -->
-        <t:template mode="CLEANUP_MODE" match="@temp:class | @temp:id | @temp:parent | @temp:linktext"/>
+        <t:template mode="CLEANUP_MODE" match="@temp:replace-id | @temp:id | @temp:parent | @temp:linktext"/>
 
         <!-- boilerplate -->
         <t:template mode="NUMBER_MODE" match="r:dump-counter">
             <t:value-of select="accumulator-after(@name)"/>
-        </t:template>
-
-        <t:template mode="MOVE_MODE" match="r:dump-bucket">
-            <t:for-each select="accumulator-after(@name)">
-                <!-- Ensure that the element is actually copied (not removed because it was moved). 
-                     But ensure that the children are removed if they were also moved -->
-                <t:copy>
-                    <t:apply-templates mode="MOVE_MODE" select="@*|node()"/>
-                </t:copy>
-            </t:for-each>
         </t:template>
 
         <!-- When linking internally look up the link-text of the target element -->
@@ -105,9 +93,13 @@ XPath functions: https://www.w3.org/TR/xpath-functions-30/
         </t:template>
 
         <t:template mode="LINK_MODE" match="r:link[@to='parent']">
-            <t:variable name="parent" select="key('internal-id', ancestor::*[@temp:parent][1]/@temp:parent)"/>
+            <t:variable name="parentId" select="ancestor::*[@temp:parent][1]/@temp:parent"/>
+            <t:if test="not($parentId)">
+                <t:message terminate="yes">BUG: Could not find an ancestor of this link that has a @temp:parent assigned</t:message>
+            </t:if>
+            <t:variable name="parent" select="key('internal-id', $parentId)"/>
             <t:if test="not($parent)">
-                <t:message terminate="yes">BUG: Could not find parent element with temp:id="{@temp:parent}"</t:message>
+                <t:message terminate="yes">BUG: Could not find parent element with temp:id="{{$parentId}}"</t:message>
             </t:if>
             <t:if test="not($parent[1]/@id)">
                 <t:message terminate="yes">This parent element does not have an id attribute on it yet. Autogenerating id attributes is not supported yet. {@selector}</t:message>
@@ -148,17 +140,19 @@ XPath functions: https://www.w3.org/TR/xpath-functions-30/
         <!-- The children of this node are matches explicitly -->
         <t:template mode="NUMBER_MODE" match="r:link-text"/>
 
-        <t:function name="phil:hasClass" as="xs:boolean">
+        <xsl:apply-templates mode="DECLARE_DUMPSITES" select=".//r:dump-bucket"/>
+
+        <!-- <t:function name="temp:hasClass" as="xs:boolean">
             <t:param name="class" as="xs:string"/>
             <t:param name="className" as="xs:string"/>
             <t:sequence select="fn:exists(fn:index-of(fn:tokenize($class, '\s+'), $className))"/>
         </t:function>
 
-        <t:function name="phil:addClass" as="xs:string">
+        <t:function name="temp:addClass" as="xs:string">
             <t:param name="class" as="xs:string"/>
             <t:param name="className" as="xs:string"/>
             <t:value-of select="fn:normalize-space(fn:concat($class, ' ', $className))"/>
-        </t:function>
+        </t:function> -->
 
     </t:transform>
 </xsl:template>
@@ -170,15 +164,16 @@ XPath functions: https://www.w3.org/TR/xpath-functions-30/
     <xsl:variable name="variablesDefined" select="r:count-value/@name"/>
     <xsl:variable name="variablesUsed" select="distinct-values(.//r:dump-counter/@name)"/>
     <xsl:variable name="templateId" select="generate-id()"/>
-    <xsl:variable name="classMatchString">*[@temp:class][phil:hasClass(@temp:class, '{$templateId}')]</xsl:variable>
+    <xsl:variable name="classMatchString">*[@temp:replace-id][@temp:replace-id = '{$templateId}']</xsl:variable>
 
     <t:template mode="ANNOTATE_MODE" match="{$matchString}">
         <t:copy>
-            <t:attribute name="temp:class">{$templateId}</t:attribute>
+            <t:attribute name="temp:replace-id">{$templateId}</t:attribute>
             <t:apply-templates mode="ANNOTATE_MODE" select="@*|node()"/>
         </t:copy>
     </t:template>
 
+    <xsl:comment>@temp:replace-id='{$templateId}' is actually: {$matchString}</xsl:comment>
     <t:template mode="EXPAND_MODE" match="{$classMatchString}">
         <xsl:apply-templates select="node()[not(self::r:replace)]">
             <xsl:with-param tunnel="yes" name="currentMode">EXPAND_MODE</xsl:with-param>
@@ -187,12 +182,23 @@ XPath functions: https://www.w3.org/TR/xpath-functions-30/
         </xsl:apply-templates>
     </t:template>
 
-    <xsl:if test="@move-to">
-        <t:template mode="MOVE_MODE" match="{$matchString}">
-            <t:comment>Moved "{$matchString}" because it had a @move-to</t:comment>
-            <t:message>Removing element {$matchString} because it has a @move-to</t:message>
-        </t:template>
-    </xsl:if>
+    <xsl:choose>
+        <xsl:when test="@move-to">
+            <t:template mode="MOVE_MODE" match="{$matchString}">
+                <t:comment>Moved "{$matchString}" because it had a @move-to</t:comment>
+                <t:message>Removing element {$matchString} because it has a @move-to</t:message>
+            </t:template>
+        </xsl:when>
+        <xsl:otherwise>
+            <t:template mode="MOVE_MODE" match="{$matchString}">
+                <t:copy>
+                    <t:apply-templates mode="MOVE_MODE" select="@*|node()">
+                        <t:with-param tunnel="yes" name="nearestReplacerContext" select="."/>
+                    </t:apply-templates>
+                </t:copy>
+            </t:template>
+        </xsl:otherwise>
+    </xsl:choose>
 
     <t:template mode="NUMBER_MODE" match="{$classMatchString}">
         <xsl:for-each select="$variablesUsed">
@@ -245,6 +251,55 @@ XPath functions: https://www.w3.org/TR/xpath-functions-30/
 
 
 <xsl:template match="r:link-text"/>
+
+<xsl:template match="r:dump-bucket">
+    <xsl:variable name="id" select="generate-id()"/>
+    <xsl:copy>
+        <xsl:attribute name="temp:id">DUMP_BUCKET_{@name}_{$id}</xsl:attribute>
+        <xsl:apply-templates select="@*|node()"/>
+    </xsl:copy>
+</xsl:template>
+
+<xsl:template mode="DECLARE_DUMPSITES" match="r:dump-bucket[not(@group-by)]">
+    <xsl:variable name="id" select="generate-id()"/>
+    <t:template mode="MOVE_MODE" match="r:dump-bucket[@temp:id='DUMP_BUCKET_{@name}_{$id}']">
+        <t:comment> r:dump-bucket[@name='{@name}'][not(@group-by)] DUMP_BUCKET_{@name}_{$id}</t:comment>
+        <t:for-each select="accumulator-after('{@name}')">
+            <!-- Ensure that the element is actually copied (not removed because it was moved). 
+                    But ensure that the children are removed if they were also moved -->
+            <t:copy>
+                <t:apply-templates mode="MOVE_MODE" select="@*|node()"/>
+            </t:copy>
+        </t:for-each>
+    </t:template>
+</xsl:template>
+
+<xsl:template mode="DECLARE_DUMPSITES" match="r:dump-bucket[@group-by]">
+    <xsl:variable name="id" select="generate-id()"/>
+    <t:template mode="MOVE_MODE" match="r:dump-bucket[@temp:id='DUMP_BUCKET_{@name}_{$id}']">
+        <t:param tunnel="yes" name="nearestReplacerContext" as="element()"/>
+        <t:comment> DUMP_BUCKET_{@name}_{$id} . nearestReplacerContext={{$nearestReplacerContext/@data-type}} Found {{count($nearestReplacerContext/{@group-by})}} groups to loop over</t:comment>
+        <t:for-each select="$nearestReplacerContext/{@group-by}">
+            <t:variable name="groupEl" select="."/>
+            <t:variable name="title" select="{@group-by-title}"/>
+            <h:div class="-i-am-a-group-by-block">
+                <h:h3>{{$title}}</h:h3>
+
+                <t:for-each select="accumulator-after('{@name}')">
+                    <t:variable name="nearestGroupEl" select="ancestor::{@group-by}"/>
+                    <t:if test="$groupEl[1] = $nearestGroupEl[1]">
+                        <t:comment>INJECTING_ELEMENT_HERE</t:comment>
+                        <!-- Ensure that the element is actually copied (not removed because it was moved). 
+                            But ensure that the children are removed if they were also moved -->
+                        <t:copy>
+                            <t:apply-templates mode="MOVE_MODE" select="@*|node()"/>
+                        </t:copy>
+                    </t:if>
+                </t:for-each>
+            </h:div>
+        </t:for-each>
+    </t:template>
+</xsl:template>
 
 <!--We have to hardcode the selector because XSLT Home Edition does not support dynamic selectors-->
 <xsl:template match="r:link[@to='child']/@selector">

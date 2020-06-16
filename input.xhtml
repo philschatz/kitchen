@@ -2,56 +2,72 @@
     <head>
         <style>
             :target { background-color: #ffc; }
+            section, div, p[data-type="solution"] {
+                border: 1px dotted #ccc;
+                margin: 1rem;
+            }
         </style>
     </head>
     <body>
         <section data-type="chapter" id="ch1">
-            <p>Here is some chapter content.</p>
-            <p>Lorem ipsum.</p>
+            <section data-type="page">
+                <h2 data-type="document-title">Kinematics in One Dimension</h2>
 
-            <p>Link to exercise C: <a href="#ex-C">[link]</a></p>
+                <p>Here is some chapter content.</p>
+                <p>Lorem ipsum.</p>
 
-            <div data-type="exercise" id="ex-A">
-                <span>What is the meaning of life?</span>
-                <p data-type="solution" id="sol-a">42</p>
-            </div>
+                <p>Link to exercise C: <a href="#ex-C">[link]</a></p>
 
-            <div data-type="exercise" id="ex-B">
-                <span>What is the Capitol of France?</span>
-                <p data-type="solution" id="sol-b">Paris</p>
-            </div>
+                <div data-type="exercise" id="ex-A">
+                    <span>What is the meaning of life?</span>
+                    <p data-type="solution" id="sol-a">42</p>
+                </div>
 
-            <div data-type="exercise" id="ex-C">
-                <span>What is the Capitol of Texas?</span>
-                <p data-type="solution" id="sol-c">Austin</p>
-            </div>
+                <div data-type="exercise" id="ex-B">
+                    <span>What is the Capitol of France?</span>
+                    <p data-type="solution" id="sol-b">Paris</p>
+                </div>
+
+            </section>
+            <section data-type="page">
+                <h2 data-type="document-title">Kinematics in Two Dimensions</h2>
+
+                <div data-type="exercise" id="ex-C">
+                    <span>What is the Capitol of Texas?</span>
+                    <p data-type="solution" id="sol-c">Austin</p>
+                </div>
+
+            </section>
         </section>
 
         <section data-type="chapter" id="ch2">
+            <section data-type="page">
+                <h2 data-type="document-title">Optics</h2>
 
-            <p>Here is some chapter content.</p>
-            <figure><figcaption>A Cat</figcaption></figure>
-            <p>Lorem ipsum1.</p>
+                <p>Here is some chapter content.</p>
+                <figure><figcaption>A Cat</figcaption></figure>
+                <p>Lorem ipsum1.</p>
 
-            <div data-type="exercise" id="ex-D">
-                <span>What is the life of Brian?</span>
-                <figure><figcaption>A Dog</figcaption></figure>
-                <p data-type="solution" id="sol-d">Who?</p>
-            </div>
+                <div data-type="exercise" id="ex-D">
+                    <span>What is the life of Brian?</span>
+                    <figure><figcaption>A Dog</figcaption></figure>
+                    <p data-type="solution" id="sol-d">Who?</p>
+                </div>
 
-            <p>Lorem ipsum2.</p>
-            <figure><figcaption>A Hippo</figcaption></figure>
-            <p>Lorem ipsum3.</p>
+                <p>Lorem ipsum2.</p>
+                <figure><figcaption>A Hippo</figcaption></figure>
+                <p>Lorem ipsum3.</p>
 
-            <div data-type="exercise" id="ex-E">
-                <span>What is the Capitol of Oregon?</span>
-                <p data-type="solution" id="sol-e">Eugene</p>
-            </div>
+                <div data-type="exercise" id="ex-E">
+                    <span>What is the Capitol of Oregon?</span>
+                    <p data-type="solution" id="sol-e">Eugene</p>
+                </div>
 
-            <div data-type="exercise" id="ex-F">
-                <span>What is the meaning of Texas?</span>
-                <p data-type="solution" id="sol-f">Six Flags</p>
-            </div>
+                <div data-type="exercise" id="ex-F">
+                    <span>What is the meaning of Texas?</span>
+                    <p data-type="solution" id="sol-f">Six Flags</p>
+                </div>
+            </section>
         </section>
 
     </body>

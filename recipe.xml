@@ -43,8 +43,8 @@ This recipe does the following:
                 <h2>Chapter <r:dump-counter name="chapterCounter"/></h2>
                 <r:children/>
                 <div>
-                    <h3>Homework</h3>
-                    <r:dump-bucket name="exerciseBucket"/>
+                    <h2>Homework</h2>
+                    <r:dump-bucket name="exerciseBucket" group-by="*[@data-type='page']" group-by-title="./*[@data-type='document-title']"/>
                 </div>
             </r:this>
 
