@@ -1,5 +1,7 @@
 # Baking Markup
 
+[![Codecov](https://img.shields.io/codecov/c/github/philschatz/sink)](https://codecov.io/gh/philschatz/sink)
+
 A [recipe config](./recipe.xml) describes a tree of replacers.
 
 Each replacer has a selector that matches content and contains 3 sections within its scope:
@@ -26,6 +28,7 @@ Each replacer has a selector that matches content and contains 3 sections within
     - [x] to the href target
 - [x] group exercises by section
 - [x] wrap the note body (not the title)
+- [x] show example [code coverage](https://codecov.io/gh/philschatz/sink)
 - [ ] update the ToC with links to new sections
 - [ ] Index-generation
 
