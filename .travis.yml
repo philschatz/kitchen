@@ -1,0 +1,4 @@
+script: echo "FIXME. This just reports existing code coverage to codecov.io"
+after_script:
+  # Report coverage to codecov
+  - bash <(curl -s https://codecov.io/bash)
