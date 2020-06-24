@@ -25,6 +25,7 @@ Each replacer has a selector that matches content and contains 3 sections within
     - [x] to a child (an Exercise links to its Answer)
     - [x] to the href target
 - [x] group exercises by section
+- [x] wrap the note body (not the title)
 - [ ] update the ToC with links to new sections
 - [ ] Index-generation
 

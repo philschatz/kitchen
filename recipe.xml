@@ -14,6 +14,8 @@ This recipe does the following:
 - numbers figures
 - groups exercises by which section they came from
     - each title links back to the section
+- wraps the note title in a span
+- wraps all the non-title children of a note in an element
 
 *************************************** -->
 <r:root 
@@ -34,6 +36,8 @@ This recipe does the following:
                 <h1>Answers</h1>
                 <r:dump-bucket name="solutionBucket"/>
             </section>
+
+            <r:index/>
         </r:this>
 
         <!--Chapter-->
@@ -94,6 +98,23 @@ This recipe does the following:
                     </r:this>
                 </r:replace>
 
+            </r:replace>
+
+            <!--Note-->
+            <r:replace selector="*[@data-type='note']">
+
+                <r:this h:class="os-note">
+                    <r:children selector="*[@data-type='title']"/>
+                    <h:div class="os-note-body">
+                        <r:children selector="*[not(@data-type='title')]"/>
+                    </h:div>
+                </r:this>
+
+                <r:replace selector="*[@data-type='title']">
+                    <h:h6 data-type="title" class="os-note-title">
+                        <r:children/>
+                    </h:h6>
+                </r:replace>
             </r:replace>
 
             <!--Section-->

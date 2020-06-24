@@ -28,7 +28,7 @@ XPath functions: https://www.w3.org/TR/xpath-functions-30/
 </xsl:template>
 
 <xsl:template match="r:root">
-    <t:transform expand-text="yes" version="3.0" exclude-result-prefixes="r xs fn temp">
+    <t:transform expand-text="yes" version="3.0" exclude-result-prefixes="h r xs fn temp">
         <t:output method="xhtml" html-version="5"/>
         <t:mode use-accumulators="#all"/>
         <t:key name="link-target" match="*" use="@id"/>
@@ -230,7 +230,7 @@ XPath functions: https://www.w3.org/TR/xpath-functions-30/
                 </t:apply-templates>
             </t:attribute>
 
-            <xsl:call-template name="applyChildren">
+            <xsl:call-template name="applyAllChildren">
                 <xsl:with-param tunnel="yes" name="currentMode">NUMBER_MODE</xsl:with-param>
                 <xsl:with-param tunnel="yes" name="variablesDefined" select="$variablesDefined"/>
                 <xsl:with-param tunnel="yes" name="variablesUsed" select="$variablesUsed"/>
@@ -248,6 +248,7 @@ XPath functions: https://www.w3.org/TR/xpath-functions-30/
 <xsl:template match="r:this">
     <xsl:comment>r:this</xsl:comment>
     <t:copy>
+        <xsl:apply-templates select="@*"/>
         <t:apply-templates select="@*"/>
         <xsl:if test="../r:declare/r:link-text">
             <r:link-text>
@@ -259,11 +260,28 @@ XPath functions: https://www.w3.org/TR/xpath-functions-30/
     </t:copy>
 </xsl:template>
 
-<xsl:template match="r:children" name="applyChildren">
+<!-- Create the attributes on the resulting "this" -->
+<xsl:template match="r:this/@h:*">
+    <t:attribute name="{local-name()}">{.}</t:attribute>
+</xsl:template>
+
+
+<xsl:template match="r:children" name="applyAllChildren">
     <xsl:param tunnel="yes" name="currentMode" as="xs:string"/>
     <xsl:param tunnel="yes" name="variablesDefined"/>
-    <xsl:comment>r:children</xsl:comment>
+    <xsl:comment>r:children selector="{@selector}"</xsl:comment>
     <t:apply-templates mode="{$currentMode}" select="node()">
+        <xsl:for-each select="$variablesDefined">
+            <t:with-param tunnel="yes" name="{.}" select="${.}"/>
+        </xsl:for-each>
+    </t:apply-templates>
+</xsl:template>
+
+<xsl:template match="r:children[@selector]">
+    <xsl:param tunnel="yes" name="currentMode" as="xs:string"/>
+    <xsl:param tunnel="yes" name="variablesDefined"/>
+    <xsl:comment>r:children selector="{@selector}"</xsl:comment>
+    <t:apply-templates mode="{$currentMode}" select="{@selector}">
         <xsl:for-each select="$variablesDefined">
             <t:with-param tunnel="yes" name="{.}" select="${.}"/>
         </xsl:for-each>
