@@ -96,7 +96,7 @@
             <h1>Answers</h1>
             <r:dump-bucket temp:id="DUMP_BUCKET_solutionBucket_d1e21" name="solutionBucket"/>
          </section>
-         <r:index xmlns="http://www.w3.org/1999/xhtml"/>
+         <!-- <r:index/> -->
       </xsl:copy>
       <!--Chapter-->
    </xsl:template>

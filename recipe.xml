@@ -37,7 +37,7 @@ This recipe does the following:
                 <r:dump-bucket name="solutionBucket"/>
             </section>
 
-            <r:index/>
+            <!-- <r:index/> -->
         </r:this>
 
         <!--Chapter-->
