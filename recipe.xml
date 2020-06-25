@@ -32,10 +32,20 @@ This recipe does the following:
 
         <r:this>
             <r:children/>
-            <section>
-                <h1>Answers</h1>
-                <r:dump-bucket name="solutionBucket"/>
-            </section>
+
+            <!-- (
+                    className: "solution",
+                    clusterBy: $CLUSTER_CHAPTER,
+                    compoundComposite: true,
+                    moveSolutionsTo: $AREA_EOB,
+                    name: "Answer Key"
+                ) -->
+            <div data-type="composite-chapter" data-uuid-key=".solution" class="os-eob os-solution-container">
+                <h1 data-type="document-title">
+                    <span class="os-text">Answer Key</span>
+                </h1>
+                <r:dump-bucket name="solutionBucket" group-by="*[@data-type='chapter']" group-by-title="./*[@data-type='document-title']"/>
+            </div>
 
             <!-- <r:index/> -->
         </r:this>
@@ -43,6 +53,7 @@ This recipe does the following:
         <!--Chapter-->
         <r:replace selector="*[@data-type='chapter']">
             <r:declare>
+                <r:link-text>Chapter <r:dump-counter name="chapterCounter"/></r:link-text>
                 <r:bucket name="exerciseBucket"/>
                 <r:counter name="sectionCounter" selector="*[@data-type='page']"/>
                 <r:counter name="exerciseCounter" selector="*[@data-type='exercise']"/>
@@ -58,8 +69,8 @@ This recipe does the following:
                 </div>
             </r:this>
 
-            <!--Exercise-->
-            <r:replace move-to="exerciseBucket" selector="*[@data-type='exercise']">
+            <!--Exercise that has a solution-->
+            <r:replace move-to="exerciseBucket" selector="*[@data-type='exercise'][.//*[@data-type='solution']]">
                 <r:declare>
                     <r:link-text>
                         <r:dump-counter name="chapterCounter"/>.<r:dump-counter name="exerciseCounter"/>
@@ -78,7 +89,22 @@ This recipe does the following:
                         <r:children/>
                     </r:this>
                 </r:replace>
+            </r:replace>
 
+            <!--Exercise with no solution-->
+            <r:replace move-to="exerciseBucket" selector="*[@data-type='exercise'][not(.//*[@data-type='solution'])]">
+                <r:declare>
+                    <r:link-text>
+                        <r:dump-counter name="chapterCounter"/>.<r:dump-counter name="exerciseCounter"/>
+                    </r:link-text>
+                </r:declare>
+                
+                <r:this>
+                    <strong>
+                        <r:dump-counter name="exerciseCounter"/>
+                    </strong>
+                    <r:children/>
+                </r:this>
             </r:replace>
 
             <!--Figure-->

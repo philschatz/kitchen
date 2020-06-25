@@ -19,6 +19,7 @@ Each replacer has a selector that matches content and contains 3 sections within
     - [x] counter values (e.g. "4.3")
     - [x] link text defined by the target element (e.g. "See Table 3.27")
     - [x] link text that contains text within the target element (e.g. "See 4.3 Kinematics in Two Dimensions")
+    - [x] id attribute to element when it is being linked to
 - [x] move
     - [x] elements (Exercises)
     - [x] elements inside elements that are moved (Exercise Answers)
@@ -26,9 +27,13 @@ Each replacer has a selector that matches content and contains 3 sections within
     - [x] to the parent (an Answer links to its Exercise)
     - [x] to a child (an Exercise links to its Answer)
     - [x] to the href target
-- [x] group exercises by section
+- [x] group 
+    - [x] exercises by section
+    - [x] answers by chapter
 - [x] wrap the note body (not the title)
 - [x] show example [code coverage](https://codecov.io/gh/philschatz/sink)
+- [x] show example of mutually exclusive matches (exercise with vs without solution)
+    - [ ] error when multiple selectors match an element
 - [ ] update the ToC with links to new sections
 - [ ] Index-generation
 
