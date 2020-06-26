@@ -26,7 +26,7 @@ This recipe does the following:
 
     <!-- <g:import href="../common-config.xml"/> -->
 
-    <!-- <g:chapter-glossary name="Key Terms"/> -->
+    <g:chapter-glossary name="Key Terms"/>
     <g:chapter-page class="key-equations" cluster="NO"  name="Key Equations"/>
     <g:chapter-page class="summary"       cluster="YES" name="Summary"/>
     <g:chapter-page class="exercises"     cluster="YES" name="Exercises"/>
@@ -44,7 +44,7 @@ This recipe does the following:
         "in=" can be CHAPTER_PART, APPENDIX_PART, or ANY_PART
         "placement=" can be BOTTOM or TOP
       -->
-    <g:table-caption in="CHAPTER_PART" placement="TOP">
+    <g:table-caption in="CHAPTER_PART" placement="BOTTOM">
         <h:span class="os-title-label">Table </h:span>
         <h:span class="os-number">
             <r:dump-counter name="chapterCounter"/>.<r:dump-counter name="tableCounter"/>

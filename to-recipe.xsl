@@ -50,12 +50,15 @@ XPath functions: https://www.w3.org/TR/xpath-functions-30/
                     <xsl:for-each select="g:chapter-page">
                         <r:bucket name="iamapagebucket-{@class}"/>
                     </xsl:for-each>
+                    <xsl:if test="g:chapter-glossary">
+                        <r:bucket name="iamaglossarypagebucket"/>
+                    </xsl:if>
                 </r:declare>
 
                 <r:this>
                     <h2>Chapter <r:dump-counter name="chapterCounter"/></h2>
                     <r:children/>
-                    <xsl:apply-templates select="g:chapter-page"/>
+                    <xsl:apply-templates select="g:chapter-page | g:chapter-glossary"/>
                 </r:this>
 
                 <xsl:for-each select="g:chapter-page">
@@ -66,6 +69,15 @@ XPath functions: https://www.w3.org/TR/xpath-functions-30/
                         </r:this>
                     </r:replace>
                 </xsl:for-each>
+
+                <xsl:if test="g:chapter-glossary">
+                    <r:replace move-to="iamaglossarypagebucket" selector="*[@data-type='glossary']">
+                        <xsl:comment>TODO: BUG: Unwrap the section and remove the title</xsl:comment>
+                        <r:this h:data-todo="UNWRAPME">
+                            <r:children selector="node()[not(self::*[@data-type='glossary-title'])]"/>
+                        </r:this>
+                    </r:replace>
+                </xsl:if>
 
                 <!--Exercise that has a solution-->
                 <r:replace selector="*[@data-type='exercise'][*[@data-type='solution']]">
@@ -171,50 +183,47 @@ XPath functions: https://www.w3.org/TR/xpath-functions-30/
 </xsl:template>
 
 
-<xsl:template match="g:table-caption[@placement='TOP']">
-    <div class="os-table">
+<xsl:template match="g:chapter-glossary">
+    <div data-type="page" data-uuid-key="glossary">
+        <h2>{@name}</h2>
+        <r:dump-bucket name="iamaglossarypagebucket"/>
+    </div>
+</xsl:template>
+
+
+<xsl:template match="g:table-caption[@placement='BOTTOM']">
+    <r:declare>
+        <r:link-text>
+            <xsl:apply-templates select="node()"/>
+        </r:link-text>
+    </r:declare>
+    <!-- <div class="os-table"> -->
+        <r:this>
+            <r:children selector="node()[not(self::h:caption)]"/>
+        </r:this>
         <div class="os-caption-container">
             <xsl:apply-templates select="node()"/>
             <r:children selector="h:caption/node()"/>
         </div>
-        <r:this h:class="top-titled">
-            <r:children selector="node()[not(self::h:caption)]"/>
-        </r:this>
-    </div>
+    <!-- </div> -->
     
 </xsl:template>
 
-
-<xsl:template match="g:figure-caption[@placement='BOTTOM']">
-    <div class="os-figure">
-        <r:this>
-            <r:children selector="node()[not(self::h:figcaption)]"/>
-        </r:this>
-        <div class="os-caption-container">
-            <r:children selector="h:figcaption"/>
-        </div>
-    </div>
-    
-    <!--Caption-->
-    <r:replace selector="h:figcaption">
-        <r:this>
-            <strong>
-                <xsl:apply-templates select="node()"/>
-            </strong>
-            <r:children/>
-        </r:this>
-    </r:replace>
-</xsl:template>
 
 <xsl:template match="g:figure-caption[@placement='TOP']">
-    <div class="os-figure">
+    <r:declare>
+        <r:link-text>
+            <xsl:apply-templates select="node()"/>
+        </r:link-text>
+    </r:declare>
+    <!-- <div class="os-figure"> -->
         <div class="os-caption-container">
             <r:children selector="h:figcaption"/>
         </div>
         <r:this>
             <r:children selector="node()[not(self::h:figcaption)]"/>
         </r:this>
-    </div>
+    <!-- </div> -->
     
     <!--Caption-->
     <r:replace selector="h:figcaption">
@@ -236,6 +245,11 @@ XPath functions: https://www.w3.org/TR/xpath-functions-30/
             </h:div>
         </r:this>
     </r:replace>
+</xsl:template>
+
+<xsl:template match="g:*">
+    <xsl:copy-of select="."/>
+    <xsl:message terminate="yes">BUG: Did not match this element. Non-exhaustive XSLT</xsl:message>
 </xsl:template>
 
 <!-- Identity Transform -->

@@ -108,7 +108,7 @@ XPath functions: https://www.w3.org/TR/xpath-functions-30/
             <t:variable name="targetId" select="substring-after(@href, '#')"/>
             <t:variable name="target" select="key('link-target', $targetId)"/>
             <t:if test="not($target)">
-                <t:message terminate="no">BUG: Could not find link target with id="{{$targetId}}". Maybe it was removed?</t:message>
+                <t:message terminate="yes">BUG: Could not find link target with id="{{$targetId}}". Maybe it was removed?</t:message>
                 <t:text>[[UNKNOWN-LINK-TARGET]]</t:text>
             </t:if>
             <t:copy inherit-namespaces="no">
@@ -124,15 +124,14 @@ XPath functions: https://www.w3.org/TR/xpath-functions-30/
             </t:if>
             <t:variable name="parent" select="key('internal-id', $parentId)"/>
             <t:if test="not($parent)">
-                <t:message terminate="no">BUG: Could not find parent element with temp:id="{{$parentId}}"</t:message>
+                <t:message terminate="yes">BUG: Could not find parent element with temp:id="{{$parentId}}"</t:message>
             </t:if>
             <t:if test="not($parent[1]/@id)">
-                <t:message terminate="no">BUG: This parent element does not have an id attribute on it yet. {@selector}</t:message>
+                <t:message terminate="yes">BUG: This parent element does not have an id attribute on it yet. {@selector}</t:message>
             </t:if>
             <h:a href="#{{$parent[1]/@id}}">
                 <t:if test="not($parent/@temp:linktext)">
-                    <t:message terminate="no">Link target #{{$parent[1]/@id}} did not have a link-text element defined for it so do not know how to render the link</t:message>
-                    [ERRORUNKNOWNLINKTEXT]
+                    <t:message terminate="yes">Link target #{{$parent[1]/@id}} did not have a link-text element defined for it so do not know how to render the link</t:message>
                 </t:if>
                 <t:value-of select="$parent[1]/@temp:linktext"/>
             </h:a>
@@ -148,14 +147,14 @@ XPath functions: https://www.w3.org/TR/xpath-functions-30/
                     <t:message terminate="yes">This child element does not have an id attribute on it yet. {@selector} <t:copy-of select="."/></t:message>
                 </t:if>
                 <h:a href="#{{$child[1]/@id}}">
-                    <t:if test="not($child/@temp:linktext)">
-                        <t:message terminate="no">Link target #{{$child[1]/@id}} did not have a link-text element defined for it so do not know how to render the link</t:message>
-                    </t:if>
                     <t:choose>
                         <t:when test="node()">
                             <t:apply-templates mode="LINK_MODE" select="node()"/>
                         </t:when>
                         <t:otherwise>
+                            <t:if test="not($child/@temp:linktext)">
+                                <t:message terminate="no">Link target #{{$child[1]/@id}} did not have a link-text element defined for it so do not know how to render the link</t:message>
+                            </t:if>
                             <t:value-of select="$child[1]/@temp:linktext"/>
                         </t:otherwise>
                     </t:choose>
@@ -260,7 +259,7 @@ XPath functions: https://www.w3.org/TR/xpath-functions-30/
     <xsl:variable name="variablesDefined" select="r:count-value/@name"/>
     <xsl:variable name="variablesUsed" select="distinct-values(.//r:dump-counter/@name)"/>
     <xsl:variable name="templateId" select="generate-id()"/>
-    <xsl:variable name="classMatchString">*[@temp:replace-id][@temp:replace-id = '{$templateId}']</xsl:variable>
+    <xsl:variable name="classMatchString">*[@temp:replace-id = '{$templateId}']</xsl:variable>
 
     <t:template mode="ANNOTATE_MODE" match="{$matchString}">
         <t:copy inherit-namespaces="no">
@@ -303,12 +302,13 @@ XPath functions: https://www.w3.org/TR/xpath-functions-30/
         <xsl:apply-templates select="r:count-value"/>
         <t:copy>
             <t:apply-templates mode="NUMBER_MODE" select="@*"/>
-            <t:attribute name="temp:linktext">
-                <t:apply-templates mode="NUMBER_MODE" select="r:link-text/node()">
-                    <t:with-param tunnel="yes" name="nearestReplacerContext" select="."/>
-                </t:apply-templates>
-            </t:attribute>
-
+            <t:if test="r:link-text/node()">
+                <t:attribute name="temp:linktext">
+                    <t:apply-templates mode="NUMBER_MODE" select="r:link-text/node()">
+                        <t:with-param tunnel="yes" name="nearestReplacerContext" select="."/>
+                    </t:apply-templates>
+                </t:attribute>
+            </t:if>
             <xsl:call-template name="applyAllChildren">
                 <xsl:with-param tunnel="yes" name="currentMode">NUMBER_MODE</xsl:with-param>
                 <xsl:with-param tunnel="yes" name="variablesDefined" select="$variablesDefined"/>
