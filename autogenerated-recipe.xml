@@ -126,16 +126,18 @@
                   <h:span xmlns:g="urn:recipe-config-xml" class="os-divider"> </h:span>
                </r:link-text>
             </r:declare>
-            <r:this>
-               <r:children selector="node()[not(self::h:caption)]"/>
-            </r:this>
-            <div class="os-caption-container">
-               <h:span xmlns:g="urn:recipe-config-xml" class="os-title-label">Table </h:span>
-               <h:span xmlns:g="urn:recipe-config-xml" class="os-number">
-                  <r:dump-counter name="chapterCounter"/>.<r:dump-counter name="tableCounter"/>
-               </h:span>
-               <h:span xmlns:g="urn:recipe-config-xml" class="os-divider"> </h:span>
-               <r:children selector="h:caption/node()"/>
+            <div class="os-table">
+               <r:this>
+                  <r:children selector="node()[not(self::h:caption)]"/>
+               </r:this>
+               <div class="os-caption-container">
+                  <h:span xmlns:g="urn:recipe-config-xml" class="os-title-label">Table </h:span>
+                  <h:span xmlns:g="urn:recipe-config-xml" class="os-number">
+                     <r:dump-counter name="chapterCounter"/>.<r:dump-counter name="tableCounter"/>
+                  </h:span>
+                  <h:span xmlns:g="urn:recipe-config-xml" class="os-divider"> </h:span>
+                  <r:children selector="h:caption/node()"/>
+               </div>
             </div>
          </r:replace>
          <r:replace selector="h:figure">
@@ -148,12 +150,14 @@
                   <h:span xmlns:g="urn:recipe-config-xml" class="os-divider"> </h:span>
                </r:link-text>
             </r:declare>
-            <div class="os-caption-container">
-               <r:children selector="h:figcaption"/>
+            <div class="os-figure">
+               <div class="os-caption-container">
+                  <r:children selector="h:figcaption"/>
+               </div>
+               <r:this>
+                  <r:children selector="node()[not(self::h:figcaption)]"/>
+               </r:this>
             </div>
-            <r:this>
-               <r:children selector="node()[not(self::h:figcaption)]"/>
-            </r:this>
             <r:replace selector="h:figcaption">
                <r:this>
                   <strong>

@@ -329,12 +329,12 @@ XPath functions: https://www.w3.org/TR/xpath-functions-30/
     <t:copy>
         <xsl:apply-templates select="@*"/>
         <t:apply-templates select="@*"/>
-        <xsl:if test="../r:declare/r:link-text">
+
+        <xsl:if test="ancestor::r:replace[1]/r:declare/r:link-text">
             <r:link-text>
-                <xsl:apply-templates select="../r:declare/r:link-text/node()"/>
+                <xsl:apply-templates select="ancestor::r:replace[1]/r:declare/r:link-text/node()"/>
             </r:link-text>
         </xsl:if>
-
         <xsl:apply-templates select="node()"/>
     </t:copy>
 </xsl:template>

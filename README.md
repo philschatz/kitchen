@@ -40,7 +40,7 @@ Each replacer has a selector that matches content and contains 3 sections within
 - [ ] update the ToC with links to new sections
 - [ ] Index-generation
 - [ ] Use a real `inject:` namespace for injected elements & attribs instead of `inject-`
-- [ ] Re-allow tables and figures to create an os-table wrapper. It is breaking the linking right now.
+- [x] Re-allow tables and figures to create an os-table wrapper. It is breaking the linking right now.
 
 # Prototype
 

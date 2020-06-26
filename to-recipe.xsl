@@ -197,7 +197,7 @@ XPath functions: https://www.w3.org/TR/xpath-functions-30/
             <xsl:apply-templates select="node()"/>
         </r:link-text>
     </r:declare>
-    <!-- <div class="os-table"> -->
+    <div class="os-table">
         <r:this>
             <r:children selector="node()[not(self::h:caption)]"/>
         </r:this>
@@ -205,8 +205,7 @@ XPath functions: https://www.w3.org/TR/xpath-functions-30/
             <xsl:apply-templates select="node()"/>
             <r:children selector="h:caption/node()"/>
         </div>
-    <!-- </div> -->
-    
+    </div>
 </xsl:template>
 
 
@@ -216,14 +215,14 @@ XPath functions: https://www.w3.org/TR/xpath-functions-30/
             <xsl:apply-templates select="node()"/>
         </r:link-text>
     </r:declare>
-    <!-- <div class="os-figure"> -->
+    <div class="os-figure">
         <div class="os-caption-container">
             <r:children selector="h:figcaption"/>
         </div>
         <r:this>
             <r:children selector="node()[not(self::h:figcaption)]"/>
         </r:this>
-    <!-- </div> -->
+    </div>
     
     <!--Caption-->
     <r:replace selector="h:figcaption">

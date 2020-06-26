@@ -518,27 +518,29 @@
    </xsl:template>
    <!--@temp:replace-id='d1e188' is actually: //h:body//*[@data-type='chapter']//h:table-->
    <xsl:template mode="EXPAND_MODE" match="*[@temp:replace-id = 'd1e188']">
-            <!--r:this-->
-      <xsl:copy>
-         <xsl:apply-templates select="@*"/>
-         <r:link-text>
+      <inject-element inject-name="div" inject-class="os-table">
+               <!--r:this-->
+         <xsl:copy>
+            <xsl:apply-templates select="@*"/>
+            <r:link-text>
+               <inject-element inject-name="span" inject-class="os-title-label">Table </inject-element>
+               <inject-element inject-name="span" inject-class="os-number">
+                  <r:dump-counter xmlns:g="urn:recipe-config-xml" name="chapterCounter"/>.<r:dump-counter xmlns:g="urn:recipe-config-xml" name="tableCounter"/>
+               </inject-element>
+               <inject-element inject-name="span" inject-class="os-divider"> </inject-element>
+            </r:link-text>
+            <!--r:children selector="node()[not(self::h:caption)]"-->
+            <xsl:apply-templates mode="EXPAND_MODE" select="node()[not(self::h:caption)]"/>
+         </xsl:copy>
+         <inject-element inject-name="div" inject-class="os-caption-container">
             <inject-element inject-name="span" inject-class="os-title-label">Table </inject-element>
             <inject-element inject-name="span" inject-class="os-number">
                <r:dump-counter xmlns:g="urn:recipe-config-xml" name="chapterCounter"/>.<r:dump-counter xmlns:g="urn:recipe-config-xml" name="tableCounter"/>
             </inject-element>
             <inject-element inject-name="span" inject-class="os-divider"> </inject-element>
-         </r:link-text>
-         <!--r:children selector="node()[not(self::h:caption)]"-->
-         <xsl:apply-templates mode="EXPAND_MODE" select="node()[not(self::h:caption)]"/>
-      </xsl:copy>
-      <inject-element inject-name="div" inject-class="os-caption-container">
-         <inject-element inject-name="span" inject-class="os-title-label">Table </inject-element>
-         <inject-element inject-name="span" inject-class="os-number">
-            <r:dump-counter xmlns:g="urn:recipe-config-xml" name="chapterCounter"/>.<r:dump-counter xmlns:g="urn:recipe-config-xml" name="tableCounter"/>
+            <!--r:children selector="h:caption/node()"-->
+            <xsl:apply-templates mode="EXPAND_MODE" select="h:caption/node()"/>
          </inject-element>
-         <inject-element inject-name="span" inject-class="os-divider"> </inject-element>
-         <!--r:children selector="h:caption/node()"-->
-         <xsl:apply-templates mode="EXPAND_MODE" select="h:caption/node()"/>
       </inject-element>
    </xsl:template>
    <xsl:template mode="MOVE_MODE" match="//h:body//*[@data-type='chapter']//h:table">
@@ -567,29 +569,31 @@
    <xsl:template mode="ANNOTATE_MODE"
                  match="//h:body//*[@data-type='chapter']//h:figure">
       <xsl:copy inherit-namespaces="no">
-         <xsl:attribute name="temp:replace-id">d1e233</xsl:attribute>
+         <xsl:attribute name="temp:replace-id">d1e236</xsl:attribute>
          <xsl:apply-templates mode="ANNOTATE_MODE" select="@*|node()"/>
       </xsl:copy>
    </xsl:template>
-   <!--@temp:replace-id='d1e233' is actually: //h:body//*[@data-type='chapter']//h:figure-->
-   <xsl:template mode="EXPAND_MODE" match="*[@temp:replace-id = 'd1e233']">
-      <inject-element inject-name="div" inject-class="os-caption-container">
-               <!--r:children selector="h:figcaption"-->
-         <xsl:apply-templates mode="EXPAND_MODE" select="h:figcaption"/>
+   <!--@temp:replace-id='d1e236' is actually: //h:body//*[@data-type='chapter']//h:figure-->
+   <xsl:template mode="EXPAND_MODE" match="*[@temp:replace-id = 'd1e236']">
+      <inject-element inject-name="div" inject-class="os-figure">
+         <inject-element inject-name="div" inject-class="os-caption-container">
+                  <!--r:children selector="h:figcaption"-->
+            <xsl:apply-templates mode="EXPAND_MODE" select="h:figcaption"/>
+         </inject-element>
+         <!--r:this-->
+         <xsl:copy>
+            <xsl:apply-templates select="@*"/>
+            <r:link-text>
+               <inject-element inject-name="span" inject-class="os-title-label">Figure </inject-element>
+               <inject-element inject-name="span" inject-class="os-number">
+                  <r:dump-counter xmlns:g="urn:recipe-config-xml" name="chapterCounter"/>.<r:dump-counter xmlns:g="urn:recipe-config-xml" name="figureCounter"/>
+               </inject-element>
+               <inject-element inject-name="span" inject-class="os-divider"> </inject-element>
+            </r:link-text>
+            <!--r:children selector="node()[not(self::h:figcaption)]"-->
+            <xsl:apply-templates mode="EXPAND_MODE" select="node()[not(self::h:figcaption)]"/>
+         </xsl:copy>
       </inject-element>
-      <!--r:this-->
-      <xsl:copy>
-         <xsl:apply-templates select="@*"/>
-         <r:link-text>
-            <inject-element inject-name="span" inject-class="os-title-label">Figure </inject-element>
-            <inject-element inject-name="span" inject-class="os-number">
-               <r:dump-counter xmlns:g="urn:recipe-config-xml" name="chapterCounter"/>.<r:dump-counter xmlns:g="urn:recipe-config-xml" name="figureCounter"/>
-            </inject-element>
-            <inject-element inject-name="span" inject-class="os-divider"> </inject-element>
-         </r:link-text>
-         <!--r:children selector="node()[not(self::h:figcaption)]"-->
-         <xsl:apply-templates mode="EXPAND_MODE" select="node()[not(self::h:figcaption)]"/>
-      </xsl:copy>
    </xsl:template>
    <xsl:template mode="MOVE_MODE" match="//h:body//*[@data-type='chapter']//h:figure">
       <xsl:copy>
@@ -598,7 +602,7 @@
          </xsl:apply-templates>
       </xsl:copy>
    </xsl:template>
-   <xsl:template mode="NUMBER_MODE" match="*[@temp:replace-id = 'd1e233']">
+   <xsl:template mode="NUMBER_MODE" match="*[@temp:replace-id = 'd1e236']">
       <xsl:param tunnel="yes" name="chapterCounter"/>
       <xsl:param tunnel="yes" name="figureCounter"/>
       <xsl:copy>
@@ -617,12 +621,12 @@
    <xsl:template mode="ANNOTATE_MODE"
                  match="//h:body//*[@data-type='chapter']//h:figure//h:figcaption">
       <xsl:copy inherit-namespaces="no">
-         <xsl:attribute name="temp:replace-id">d1e264</xsl:attribute>
+         <xsl:attribute name="temp:replace-id">d1e270</xsl:attribute>
          <xsl:apply-templates mode="ANNOTATE_MODE" select="@*|node()"/>
       </xsl:copy>
    </xsl:template>
-   <!--@temp:replace-id='d1e264' is actually: //h:body//*[@data-type='chapter']//h:figure//h:figcaption-->
-   <xsl:template mode="EXPAND_MODE" match="*[@temp:replace-id = 'd1e264']">
+   <!--@temp:replace-id='d1e270' is actually: //h:body//*[@data-type='chapter']//h:figure//h:figcaption-->
+   <xsl:template mode="EXPAND_MODE" match="*[@temp:replace-id = 'd1e270']">
                <!--r:this-->
       <xsl:copy>
          <xsl:apply-templates select="@*"/>
@@ -645,7 +649,7 @@
          </xsl:apply-templates>
       </xsl:copy>
    </xsl:template>
-   <xsl:template mode="NUMBER_MODE" match="*[@temp:replace-id = 'd1e264']">
+   <xsl:template mode="NUMBER_MODE" match="*[@temp:replace-id = 'd1e270']">
       <xsl:param tunnel="yes" name="chapterCounter"/>
       <xsl:param tunnel="yes" name="figureCounter"/>
       <xsl:copy>
@@ -664,12 +668,12 @@
    <xsl:template mode="ANNOTATE_MODE"
                  match="//h:body//*[@data-type='chapter']//*[@data-type='note'][@class][func:hasClass(@class, 'link-to-learning')]">
       <xsl:copy inherit-namespaces="no">
-         <xsl:attribute name="temp:replace-id">d1e289</xsl:attribute>
+         <xsl:attribute name="temp:replace-id">d1e295</xsl:attribute>
          <xsl:apply-templates mode="ANNOTATE_MODE" select="@*|node()"/>
       </xsl:copy>
    </xsl:template>
-   <!--@temp:replace-id='d1e289' is actually: //h:body//*[@data-type='chapter']//*[@data-type='note'][@class][func:hasClass(@class, 'link-to-learning')]-->
-   <xsl:template mode="EXPAND_MODE" match="*[@temp:replace-id = 'd1e289']">
+   <!--@temp:replace-id='d1e295' is actually: //h:body//*[@data-type='chapter']//*[@data-type='note'][@class][func:hasClass(@class, 'link-to-learning')]-->
+   <xsl:template mode="EXPAND_MODE" match="*[@temp:replace-id = 'd1e295']">
             <!--r:this-->
       <xsl:copy>
          <xsl:attribute name="class">os-note link-to-learning</xsl:attribute>
@@ -691,7 +695,7 @@
          </xsl:apply-templates>
       </xsl:copy>
    </xsl:template>
-   <xsl:template mode="NUMBER_MODE" match="*[@temp:replace-id = 'd1e289']">
+   <xsl:template mode="NUMBER_MODE" match="*[@temp:replace-id = 'd1e295']">
       <xsl:copy>
          <xsl:apply-templates mode="NUMBER_MODE" select="@*"/>
          <xsl:if test="r:link-text/node()">
@@ -708,12 +712,12 @@
    <xsl:template mode="ANNOTATE_MODE"
                  match="//h:body//*[@data-type='chapter']//*[@data-type='note'][@class][func:hasClass(@class, 'sciences-interconnect')]">
       <xsl:copy inherit-namespaces="no">
-         <xsl:attribute name="temp:replace-id">d1e304</xsl:attribute>
+         <xsl:attribute name="temp:replace-id">d1e310</xsl:attribute>
          <xsl:apply-templates mode="ANNOTATE_MODE" select="@*|node()"/>
       </xsl:copy>
    </xsl:template>
-   <!--@temp:replace-id='d1e304' is actually: //h:body//*[@data-type='chapter']//*[@data-type='note'][@class][func:hasClass(@class, 'sciences-interconnect')]-->
-   <xsl:template mode="EXPAND_MODE" match="*[@temp:replace-id = 'd1e304']">
+   <!--@temp:replace-id='d1e310' is actually: //h:body//*[@data-type='chapter']//*[@data-type='note'][@class][func:hasClass(@class, 'sciences-interconnect')]-->
+   <xsl:template mode="EXPAND_MODE" match="*[@temp:replace-id = 'd1e310']">
             <!--r:this-->
       <xsl:copy>
          <xsl:attribute name="class">os-note sciences-interconnect</xsl:attribute>
@@ -735,7 +739,7 @@
          </xsl:apply-templates>
       </xsl:copy>
    </xsl:template>
-   <xsl:template mode="NUMBER_MODE" match="*[@temp:replace-id = 'd1e304']">
+   <xsl:template mode="NUMBER_MODE" match="*[@temp:replace-id = 'd1e310']">
       <xsl:copy>
          <xsl:apply-templates mode="NUMBER_MODE" select="@*"/>
          <xsl:if test="r:link-text/node()">
@@ -752,12 +756,12 @@
    <xsl:template mode="ANNOTATE_MODE"
                  match="//h:body//*[@data-type='chapter']//*[@data-type='note'][@class][func:hasClass(@class, 'chemist-portrait')]">
       <xsl:copy inherit-namespaces="no">
-         <xsl:attribute name="temp:replace-id">d1e318</xsl:attribute>
+         <xsl:attribute name="temp:replace-id">d1e324</xsl:attribute>
          <xsl:apply-templates mode="ANNOTATE_MODE" select="@*|node()"/>
       </xsl:copy>
    </xsl:template>
-   <!--@temp:replace-id='d1e318' is actually: //h:body//*[@data-type='chapter']//*[@data-type='note'][@class][func:hasClass(@class, 'chemist-portrait')]-->
-   <xsl:template mode="EXPAND_MODE" match="*[@temp:replace-id = 'd1e318']">
+   <!--@temp:replace-id='d1e324' is actually: //h:body//*[@data-type='chapter']//*[@data-type='note'][@class][func:hasClass(@class, 'chemist-portrait')]-->
+   <xsl:template mode="EXPAND_MODE" match="*[@temp:replace-id = 'd1e324']">
             <!--r:this-->
       <xsl:copy>
          <xsl:attribute name="class">os-note chemist-portrait</xsl:attribute>
@@ -779,7 +783,7 @@
          </xsl:apply-templates>
       </xsl:copy>
    </xsl:template>
-   <xsl:template mode="NUMBER_MODE" match="*[@temp:replace-id = 'd1e318']">
+   <xsl:template mode="NUMBER_MODE" match="*[@temp:replace-id = 'd1e324']">
       <xsl:copy>
          <xsl:apply-templates mode="NUMBER_MODE" select="@*"/>
          <xsl:if test="r:link-text/node()">
@@ -796,12 +800,12 @@
    <xsl:template mode="ANNOTATE_MODE"
                  match="//h:body//*[@data-type='chapter']//*[@data-type='note'][@class][func:hasClass(@class, 'everyday-life')]">
       <xsl:copy inherit-namespaces="no">
-         <xsl:attribute name="temp:replace-id">d1e332</xsl:attribute>
+         <xsl:attribute name="temp:replace-id">d1e338</xsl:attribute>
          <xsl:apply-templates mode="ANNOTATE_MODE" select="@*|node()"/>
       </xsl:copy>
    </xsl:template>
-   <!--@temp:replace-id='d1e332' is actually: //h:body//*[@data-type='chapter']//*[@data-type='note'][@class][func:hasClass(@class, 'everyday-life')]-->
-   <xsl:template mode="EXPAND_MODE" match="*[@temp:replace-id = 'd1e332']">
+   <!--@temp:replace-id='d1e338' is actually: //h:body//*[@data-type='chapter']//*[@data-type='note'][@class][func:hasClass(@class, 'everyday-life')]-->
+   <xsl:template mode="EXPAND_MODE" match="*[@temp:replace-id = 'd1e338']">
             <!--r:this-->
       <xsl:copy>
          <xsl:attribute name="class">os-note everyday-life</xsl:attribute>
@@ -823,7 +827,7 @@
          </xsl:apply-templates>
       </xsl:copy>
    </xsl:template>
-   <xsl:template mode="NUMBER_MODE" match="*[@temp:replace-id = 'd1e332']">
+   <xsl:template mode="NUMBER_MODE" match="*[@temp:replace-id = 'd1e338']">
       <xsl:copy>
          <xsl:apply-templates mode="NUMBER_MODE" select="@*"/>
          <xsl:if test="r:link-text/node()">
@@ -840,17 +844,17 @@
    <xsl:template mode="ANNOTATE_MODE"
                  match="//h:body//*[@data-type='chapter']//*[@data-type='page']">
       <xsl:copy inherit-namespaces="no">
-         <xsl:attribute name="temp:replace-id">d1e346</xsl:attribute>
+         <xsl:attribute name="temp:replace-id">d1e352</xsl:attribute>
          <xsl:apply-templates mode="ANNOTATE_MODE" select="@*|node()"/>
       </xsl:copy>
    </xsl:template>
-   <!--@temp:replace-id='d1e346' is actually: //h:body//*[@data-type='chapter']//*[@data-type='page']-->
-   <xsl:template mode="EXPAND_MODE" match="*[@temp:replace-id = 'd1e346']">
+   <!--@temp:replace-id='d1e352' is actually: //h:body//*[@data-type='chapter']//*[@data-type='page']-->
+   <xsl:template mode="EXPAND_MODE" match="*[@temp:replace-id = 'd1e352']">
             <!--r:this-->
       <xsl:copy>
          <xsl:apply-templates select="@*"/>
          <r:link-text>
-            <r:copy-content temp:id="COPY_CONTENT__d1e352"
+            <r:copy-content temp:id="COPY_CONTENT__d1e358"
                             selector="./*[@data-type='document-title']/node()"/>
          </r:link-text>
          <!--r:children selector=""-->
@@ -865,7 +869,7 @@
          </xsl:apply-templates>
       </xsl:copy>
    </xsl:template>
-   <xsl:template mode="NUMBER_MODE" match="*[@temp:replace-id = 'd1e346']">
+   <xsl:template mode="NUMBER_MODE" match="*[@temp:replace-id = 'd1e352']">
       <xsl:param tunnel="yes" name="chapterCounter"/>
       <xsl:param tunnel="yes" name="sectionCounter"/>
       <xsl:copy>
@@ -884,12 +888,12 @@
    <xsl:template mode="ANNOTATE_MODE"
                  match="//h:body//*[@data-type='chapter']//*[@data-type='page']//*[@data-type='document-title']">
       <xsl:copy inherit-namespaces="no">
-         <xsl:attribute name="temp:replace-id">d1e361</xsl:attribute>
+         <xsl:attribute name="temp:replace-id">d1e367</xsl:attribute>
          <xsl:apply-templates mode="ANNOTATE_MODE" select="@*|node()"/>
       </xsl:copy>
    </xsl:template>
-   <!--@temp:replace-id='d1e361' is actually: //h:body//*[@data-type='chapter']//*[@data-type='page']//*[@data-type='document-title']-->
-   <xsl:template mode="EXPAND_MODE" match="*[@temp:replace-id = 'd1e361']">
+   <!--@temp:replace-id='d1e367' is actually: //h:body//*[@data-type='chapter']//*[@data-type='page']//*[@data-type='document-title']-->
+   <xsl:template mode="EXPAND_MODE" match="*[@temp:replace-id = 'd1e367']">
                <!--r:this-->
       <xsl:copy>
          <xsl:apply-templates select="@*"/>
@@ -904,7 +908,7 @@
          </xsl:apply-templates>
       </xsl:copy>
    </xsl:template>
-   <xsl:template mode="NUMBER_MODE" match="*[@temp:replace-id = 'd1e361']">
+   <xsl:template mode="NUMBER_MODE" match="*[@temp:replace-id = 'd1e367']">
       <xsl:param tunnel="yes" name="chapterCounter"/>
       <xsl:param tunnel="yes" name="sectionCounter"/>
       <xsl:copy>
@@ -1175,7 +1179,7 @@
       </xsl:for-each>
    </xsl:template>
    <xsl:template mode="NUMBER_MODE"
-                 match="r:copy-content[@temp:id='COPY_CONTENT__d1e352']">
+                 match="r:copy-content[@temp:id='COPY_CONTENT__d1e358']">
       <xsl:param tunnel="yes" name="nearestReplacerContext" as="element()"/>
       <xsl:apply-templates mode="NUMBER_MODE"
                            select="$nearestReplacerContext/./*[@data-type='document-title']/node()"/>
