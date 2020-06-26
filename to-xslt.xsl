@@ -468,11 +468,12 @@ XPath functions: https://www.w3.org/TR/xpath-functions-30/
 
 <xsl:template mode="ACCUMULATORS_MODE" match="r:counter">
     <xsl:variable name="name" select="@name"/>
+    <xsl:variable name="startAt" select="@start-at" as="xs:integer"/>
     <xsl:variable name="resetMatchString">
         <xsl:call-template name="build-match-ancestors"/>
     </xsl:variable>
     <t:accumulator name="{@name}" initial-value="0">
-        <t:accumulator-rule match="{$resetMatchString}" select="0"/>
+        <t:accumulator-rule match="{$resetMatchString}" select="{$startAt - 1}"/>
         <t:accumulator-rule match="{@selector}" select="$value + 1"/>
     </t:accumulator>
 </xsl:template>

@@ -19,6 +19,7 @@ Each replacer has a selector that matches content and contains 3 sections within
 - [x] inject
     - [x] recipe-defined content at the beginning or end of a matched element (e.g. "Review Questions")
     - [x] counter values (e.g. "4.3")
+        - [x] allow-zero-based counting
     - [x] link text defined by the target element (e.g. "See Table 3.27")
     - [x] link text that contains text within the target element (e.g. "See 4.3 Kinematics in Two Dimensions")
     - [x] id attribute to element when it is being linked to
@@ -69,11 +70,11 @@ and its contents is used via a `<r:dump-bucket>`.
 
 ## Counter
 
-Counters are declared inside a replacer scope and they are
+Counters are declared inside a replacer scope via a `<r:counter name="..." selector="..." start-at="1">` and they are
 used within that replacer or in nested replacers via a `<r:dump-counter>`.
 
 The `selector="..."` attribute defines when the counter is incremented.
-It is automatically reset at the replacer scope.
+It is automatically reset to `start-at="..."` at the replacer scope.
 
 
 ## Link Text

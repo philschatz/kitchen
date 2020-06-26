@@ -87,7 +87,7 @@
       <xsl:accumulator-rule match="*[@data-type='chapter']" select="$value + 1"/>
    </xsl:accumulator>
    <xsl:accumulator name="sectionCounter" initial-value="0">
-      <xsl:accumulator-rule match="//h:body//*[@data-type='chapter']" select="0"/>
+      <xsl:accumulator-rule match="//h:body//*[@data-type='chapter']" select="-1"/>
       <xsl:accumulator-rule match="*[@data-type='page']" select="$value + 1"/>
    </xsl:accumulator>
    <xsl:accumulator name="exerciseCounter" initial-value="0">

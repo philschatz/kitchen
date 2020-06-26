@@ -29,7 +29,7 @@ XPath functions: https://www.w3.org/TR/xpath-functions-30/
         <r:replace selector="h:body">
             <r:declare>
                 <r:bucket name="solutionBucket"/>
-                <r:counter name="chapterCounter" selector="*[@data-type='chapter']"/>
+                <r:counter start-at="1" name="chapterCounter" selector="*[@data-type='chapter']"/>
             </r:declare>
 
             <r:this>
@@ -42,10 +42,10 @@ XPath functions: https://www.w3.org/TR/xpath-functions-30/
             <r:replace selector="*[@data-type='chapter']">
                 <r:declare>
                     <r:link-text>Chapter <r:dump-counter name="chapterCounter"/></r:link-text>
-                    <r:counter name="sectionCounter" selector="*[@data-type='page']"/>
-                    <r:counter name="exerciseCounter" selector="*[@data-type='exercise']"/>
-                    <r:counter name="figureCounter" selector="h:figure"/>
-                    <r:counter name="tableCounter" selector="h:table"/>
+                    <r:counter start-at="0" name="sectionCounter" selector="*[@data-type='page']"/>
+                    <r:counter start-at="1" name="exerciseCounter" selector="*[@data-type='exercise']"/>
+                    <r:counter start-at="1" name="figureCounter" selector="h:figure"/>
+                    <r:counter start-at="1" name="tableCounter" selector="h:table"/>
 
                     <xsl:for-each select="g:chapter-page">
                         <r:bucket name="iamapagebucket-{@class}"/>
