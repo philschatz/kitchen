@@ -4,7 +4,6 @@
                xmlns:fn="http://www.w3.org/2005/xpath-functions"
                xmlns:func="urn:temp-functions-defined-in-here"
                xmlns:h="http://www.w3.org/1999/xhtml"
-               xmlns:inject="urn:temp-injected-element-or-attribute"
                xmlns:r="urn:replacer-xml"
                xmlns:temp="urn:temp-placeholder-element"
                xmlns:xs="http://www.w3.org/2001/XMLSchema"
@@ -117,18 +116,18 @@
          <xsl:apply-templates select="@*"/>
          <!--r:children selector=""-->
          <xsl:apply-templates mode="EXPAND_MODE" select="node()"/>
-         <inject:element inject-name="div"
-                         inject:data-type="composite-chapter"
-                         inject:data-uuid-key=".solution"
-                         inject:class="os-eob os-solution-container">
-            <inject:element inject-name="h1" inject:data-type="document-title">
-               <inject:element inject-name="span" inject:class="os-text">Answer Key</inject:element>
-            </inject:element>
+         <inject-element inject-name="div"
+                         inject-data-type="composite-chapter"
+                         inject-data-uuid-key=".solution"
+                         inject-class="os-eob os-solution-container">
+            <inject-element inject-name="h1" inject-data-type="document-title">
+               <inject-element inject-name="span" inject-class="os-text">Answer Key</inject-element>
+            </inject-element>
             <r:dump-bucket temp:id="DUMP_BUCKET_solutionBucket_d1e25"
                            name="solutionBucket"
                            group-by="*[@data-type='chapter']"
                            group-by-title="./*[@data-type='document-title']"/>
-         </inject:element>
+         </inject-element>
       </xsl:copy>
    </xsl:template>
    <xsl:template mode="MOVE_MODE" match="//h:body">
@@ -170,35 +169,35 @@
          <xsl:apply-templates select="@*"/>
          <r:link-text>Chapter <r:dump-counter name="chapterCounter"/>
          </r:link-text>
-         <inject:element inject-name="h2">Chapter <r:dump-counter name="chapterCounter"/>
-         </inject:element>
+         <inject-element inject-name="h2">Chapter <r:dump-counter name="chapterCounter"/>
+         </inject-element>
          <!--r:children selector=""-->
          <xsl:apply-templates mode="EXPAND_MODE" select="node()"/>
-         <inject:element inject-name="div"
-                         inject:data-type="page"
-                         inject:data-uuid-key=".key-equations">
-            <inject:element inject-name="h2">Key Equations</inject:element>
+         <inject-element inject-name="div"
+                         inject-data-type="page"
+                         inject-data-uuid-key=".key-equations">
+            <inject-element inject-name="h2">Key Equations</inject-element>
             <r:dump-bucket temp:id="DUMP_BUCKET_iamapagebucket-key-equations_d1e67"
                            name="iamapagebucket-key-equations"/>
-         </inject:element>
-         <inject:element inject-name="div"
-                         inject:data-type="page"
-                         inject:data-uuid-key=".summary">
-            <inject:element inject-name="h2">Summary</inject:element>
+         </inject-element>
+         <inject-element inject-name="div"
+                         inject-data-type="page"
+                         inject-data-uuid-key=".summary">
+            <inject-element inject-name="h2">Summary</inject-element>
             <r:dump-bucket temp:id="DUMP_BUCKET_iamapagebucket-summary_d1e74"
                            name="iamapagebucket-summary"
                            group-by="*[@data-type='page']"
                            group-by-title="./*[@data-type='document-title']"/>
-         </inject:element>
-         <inject:element inject-name="div"
-                         inject:data-type="page"
-                         inject:data-uuid-key=".exercises">
-            <inject:element inject-name="h2">Exercises</inject:element>
+         </inject-element>
+         <inject-element inject-name="div"
+                         inject-data-type="page"
+                         inject-data-uuid-key=".exercises">
+            <inject-element inject-name="h2">Exercises</inject-element>
             <r:dump-bucket temp:id="DUMP_BUCKET_iamapagebucket-exercises_d1e81"
                            name="iamapagebucket-exercises"
                            group-by="*[@data-type='page']"
                            group-by-title="./*[@data-type='document-title']"/>
-         </inject:element>
+         </inject-element>
       </xsl:copy>
    </xsl:template>
    <xsl:template mode="MOVE_MODE" match="//h:body//*[@data-type='chapter']">
@@ -432,9 +431,9 @@
          <r:link-text>
             <r:dump-counter name="chapterCounter"/>.<r:dump-counter name="exerciseCounter"/>
          </r:link-text>
-         <inject:element inject-name="strong">
+         <inject-element inject-name="strong">
             <r:dump-counter name="exerciseCounter"/>
-         </inject:element>
+         </inject-element>
          <!--r:children selector=""-->
          <xsl:apply-templates mode="EXPAND_MODE" select="node()"/>
       </xsl:copy>
@@ -471,16 +470,16 @@
    <!--@temp:replace-id='d1e169' is actually: //h:body//*[@data-type='chapter']//h:table-->
    <xsl:template mode="EXPAND_MODE"
                  match="*[@temp:replace-id][@temp:replace-id = 'd1e169']">
-      <inject:element inject-name="div" inject:class="os-table">
-         <inject:element inject-name="div" inject:class="os-caption-container">
-            <inject:element inject-name="span" inject:class="os-title-label">Table </inject:element>
-            <inject:element inject-name="span" inject:class="os-number">
+      <inject-element inject-name="div" inject-class="os-table">
+         <inject-element inject-name="div" inject-class="os-caption-container">
+            <inject-element inject-name="span" inject-class="os-title-label">Table </inject-element>
+            <inject-element inject-name="span" inject-class="os-number">
                <r:dump-counter xmlns:g="urn:recipe-config-xml" name="chapterCounter"/>.<r:dump-counter xmlns:g="urn:recipe-config-xml" name="tableCounter"/>
-            </inject:element>
-            <inject:element inject-name="span" inject:class="os-divider"> </inject:element>
+            </inject-element>
+            <inject-element inject-name="span" inject-class="os-divider"> </inject-element>
             <!--r:children selector="h:caption/node()"-->
             <xsl:apply-templates mode="EXPAND_MODE" select="h:caption/node()"/>
-         </inject:element>
+         </inject-element>
          <!--r:this-->
          <xsl:copy>
             <xsl:attribute name="class">top-titled</xsl:attribute>
@@ -488,7 +487,7 @@
             <!--r:children selector="node()[not(self::h:caption)]"-->
             <xsl:apply-templates mode="EXPAND_MODE" select="node()[not(self::h:caption)]"/>
          </xsl:copy>
-      </inject:element>
+      </inject-element>
    </xsl:template>
    <xsl:template mode="MOVE_MODE" match="//h:body//*[@data-type='chapter']//h:table">
       <xsl:copy>
@@ -522,18 +521,18 @@
    <!--@temp:replace-id='d1e198' is actually: //h:body//*[@data-type='chapter']//h:figure-->
    <xsl:template mode="EXPAND_MODE"
                  match="*[@temp:replace-id][@temp:replace-id = 'd1e198']">
-      <inject:element inject-name="div" inject:class="os-figure">
-         <inject:element inject-name="div" inject:class="os-caption-container">
+      <inject-element inject-name="div" inject-class="os-figure">
+         <inject-element inject-name="div" inject-class="os-caption-container">
                   <!--r:children selector="h:figcaption"-->
             <xsl:apply-templates mode="EXPAND_MODE" select="h:figcaption"/>
-         </inject:element>
+         </inject-element>
          <!--r:this-->
          <xsl:copy>
             <xsl:apply-templates select="@*"/>
             <!--r:children selector="node()[not(self::h:figcaption)]"-->
             <xsl:apply-templates mode="EXPAND_MODE" select="node()[not(self::h:figcaption)]"/>
          </xsl:copy>
-      </inject:element>
+      </inject-element>
    </xsl:template>
    <xsl:template mode="MOVE_MODE" match="//h:body//*[@data-type='chapter']//h:figure">
       <xsl:copy>
@@ -570,13 +569,13 @@
                <!--r:this-->
       <xsl:copy>
          <xsl:apply-templates select="@*"/>
-         <inject:element inject-name="strong">
-            <inject:element inject-name="span" inject:class="os-title-label">Figure </inject:element>
-            <inject:element inject-name="span" inject:class="os-number">
+         <inject-element inject-name="strong">
+            <inject-element inject-name="span" inject-class="os-title-label">Figure </inject-element>
+            <inject-element inject-name="span" inject-class="os-number">
                <r:dump-counter xmlns:g="urn:recipe-config-xml" name="chapterCounter"/>.<r:dump-counter xmlns:g="urn:recipe-config-xml" name="figureCounter"/>
-            </inject:element>
-            <inject:element inject-name="span" inject:class="os-divider"> </inject:element>
-         </inject:element>
+            </inject-element>
+            <inject-element inject-name="span" inject-class="os-divider"> </inject-element>
+         </inject-element>
          <!--r:children selector=""-->
          <xsl:apply-templates mode="EXPAND_MODE" select="node()"/>
       </xsl:copy>
@@ -618,13 +617,13 @@
       <xsl:copy>
          <xsl:attribute name="class">os-note link-to-learning</xsl:attribute>
          <xsl:apply-templates select="@*"/>
-         <inject:element inject-name="h6"
-                         inject:data-type="title"
-                         inject:class="os-note-title">Link to Learning</inject:element>
-         <inject:element inject-name="div" inject:class="os-note-body">
+         <inject-element inject-name="h6"
+                         inject-data-type="title"
+                         inject-class="os-note-title">Link to Learning</inject-element>
+         <inject-element inject-name="div" inject-class="os-note-body">
                   <!--r:children selector="*[not(@data-type='title')]"-->
             <xsl:apply-templates mode="EXPAND_MODE" select="*[not(@data-type='title')]"/>
-         </inject:element>
+         </inject-element>
       </xsl:copy>
    </xsl:template>
    <xsl:template mode="MOVE_MODE"
@@ -662,13 +661,13 @@
       <xsl:copy>
          <xsl:attribute name="class">os-note sciences-interconnect</xsl:attribute>
          <xsl:apply-templates select="@*"/>
-         <inject:element inject-name="h6"
-                         inject:data-type="title"
-                         inject:class="os-note-title">How Sciences Interconnect</inject:element>
-         <inject:element inject-name="div" inject:class="os-note-body">
+         <inject-element inject-name="h6"
+                         inject-data-type="title"
+                         inject-class="os-note-title">How Sciences Interconnect</inject-element>
+         <inject-element inject-name="div" inject-class="os-note-body">
                   <!--r:children selector="*[not(@data-type='title')]"-->
             <xsl:apply-templates mode="EXPAND_MODE" select="*[not(@data-type='title')]"/>
-         </inject:element>
+         </inject-element>
       </xsl:copy>
    </xsl:template>
    <xsl:template mode="MOVE_MODE"
@@ -706,13 +705,13 @@
       <xsl:copy>
          <xsl:attribute name="class">os-note chemist-portrait</xsl:attribute>
          <xsl:apply-templates select="@*"/>
-         <inject:element inject-name="h6"
-                         inject:data-type="title"
-                         inject:class="os-note-title">Portrait of a Chemist</inject:element>
-         <inject:element inject-name="div" inject:class="os-note-body">
+         <inject-element inject-name="h6"
+                         inject-data-type="title"
+                         inject-class="os-note-title">Portrait of a Chemist</inject-element>
+         <inject-element inject-name="div" inject-class="os-note-body">
                   <!--r:children selector="*[not(@data-type='title')]"-->
             <xsl:apply-templates mode="EXPAND_MODE" select="*[not(@data-type='title')]"/>
-         </inject:element>
+         </inject-element>
       </xsl:copy>
    </xsl:template>
    <xsl:template mode="MOVE_MODE"
@@ -750,13 +749,13 @@
       <xsl:copy>
          <xsl:attribute name="class">os-note everyday-life</xsl:attribute>
          <xsl:apply-templates select="@*"/>
-         <inject:element inject-name="h6"
-                         inject:data-type="title"
-                         inject:class="os-note-title">Chemistry in Everyday Life</inject:element>
-         <inject:element inject-name="div" inject:class="os-note-body">
+         <inject-element inject-name="h6"
+                         inject-data-type="title"
+                         inject-class="os-note-title">Chemistry in Everyday Life</inject-element>
+         <inject-element inject-name="div" inject-class="os-note-body">
                   <!--r:children selector="*[not(@data-type='title')]"-->
             <xsl:apply-templates mode="EXPAND_MODE" select="*[not(@data-type='title')]"/>
-         </inject:element>
+         </inject-element>
       </xsl:copy>
    </xsl:template>
    <xsl:template mode="MOVE_MODE"
@@ -1128,16 +1127,24 @@
                 </style>
       </xsl:copy>
    </xsl:template>
-   <xsl:template mode="ERASE_ID_MODE" match="inject:element">
+   <xsl:template mode="ERASE_ID_MODE" match="h:inject-element">
       <xsl:element name="{@inject-name}"
                    namespace="http://www.w3.org/1999/xhtml"
                    inherit-namespaces="no">
-         <xsl:apply-templates mode="ERASE_ID_MODE" select="@inject:*|node()"/>
+         <xsl:apply-templates mode="ERASE_ID_MODE" select="@*|node()"/>
       </xsl:element>
    </xsl:template>
-   <xsl:template mode="ERASE_ID_MODE" match="inject:element/@inject-name"/>
-   <xsl:template mode="ERASE_ID_MODE" match="@inject:*">
-      <xsl:attribute name="{local-name()}">{.}</xsl:attribute>
+   <xsl:template mode="ERASE_ID_MODE" match="h:inject-element/@*">
+      <xsl:choose>
+         <xsl:when test="local-name() = 'inject-name'"/>
+         <xsl:when test="starts-with(local-name(), 'inject-')">
+            <xsl:attribute name="{substring-after(local-name(), 'inject-')}">{.}</xsl:attribute>
+         </xsl:when>
+         <xsl:otherwise>
+            <xsl:message terminate="no">BUG? Injected element has a non-injected attribute</xsl:message>
+            <xsl:copy/>
+         </xsl:otherwise>
+      </xsl:choose>
    </xsl:template>
    <xsl:function name="temp:getId" as="xs:string">
       <xsl:param name="context" as="element()"/>

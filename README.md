@@ -38,6 +38,7 @@ Each replacer has a selector that matches content and contains 3 sections within
     - [ ] error when multiple selectors match an element
 - [ ] update the ToC with links to new sections
 - [ ] Index-generation
+- [ ] Use a real `inject:` namespace for injected elements & attribs instead of `inject-`
 
 # Prototype
 

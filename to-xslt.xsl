@@ -17,7 +17,6 @@ XPath functions: https://www.w3.org/TR/xpath-functions-30/
     xmlns:r="urn:replacer-xml"
     xmlns:temp="urn:temp-placeholder-element"
     xmlns:func="urn:temp-functions-defined-in-here"
-    xmlns:inject="urn:temp-injected-element-or-attribute"
     expand-text="yes"
     version="3.0">
 
@@ -204,16 +203,26 @@ XPath functions: https://www.w3.org/TR/xpath-functions-30/
             </t:copy>
         </t:template>
 
-        <t:template mode="ERASE_ID_MODE" match="inject:element">
+        <!-- FIXME: instead of using a separate namespace, clobber the HTML namespace with "inject-" elements and attributes
+             For some reason the the namespace declaration remained on elements even though it was explicitly excluded
+             and nothing in it still had the namespace -->
+        <t:template mode="ERASE_ID_MODE" match="h:inject-element">
             <t:element name="{{@inject-name}}" namespace="http://www.w3.org/1999/xhtml" inherit-namespaces="no">
-                <t:apply-templates mode="ERASE_ID_MODE" select="@inject:*|node()"/>
+                <t:apply-templates mode="ERASE_ID_MODE" select="@*|node()"/>
             </t:element>
         </t:template>
 
-        <t:template mode="ERASE_ID_MODE" match="inject:element/@inject-name"/>
-
-        <t:template mode="ERASE_ID_MODE" match="@inject:*">
-            <t:attribute name="{{local-name()}}">{{.}}</t:attribute>
+        <t:template mode="ERASE_ID_MODE" match="h:inject-element/@*">
+            <t:choose>
+                <t:when test="local-name() = 'inject-name'"/>
+                <t:when test="starts-with(local-name(), 'inject-')">
+                    <t:attribute name="{{substring-after(local-name(), 'inject-')}}">{{.}}</t:attribute>
+                </t:when>
+                <t:otherwise>
+                    <t:message terminate="no">BUG? Injected element has a non-injected attribute</t:message>
+                    <t:copy/>
+                </t:otherwise>
+            </t:choose>
         </t:template>
 
 
@@ -478,13 +487,13 @@ XPath functions: https://www.w3.org/TR/xpath-functions-30/
     This occurred when we injected new pages into a chapter. We unexpectedly began matching on them
     -->
 <xsl:template match="h:*">
-    <inject:element inject-name="{local-name()}">
+    <inject-element inject-name="{local-name()}">
         <xsl:apply-templates select="@*|node()"/>
-    </inject:element>
+    </inject-element>
 </xsl:template>
 
 <xsl:template match="h:*/@*">
-    <xsl:attribute name="inject:{local-name()}">{.}</xsl:attribute>
+    <xsl:attribute name="inject-{local-name()}">{.}</xsl:attribute>
 </xsl:template>
 
 
