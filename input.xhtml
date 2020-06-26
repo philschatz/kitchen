@@ -1,12 +1,5 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
-        <style>
-            :target { background-color: #ffc; }
-            section, div, p[data-type="solution"] {
-                border: 1px dotted #ccc;
-                margin: 1rem;
-            }
-        </style>
     </head>
     <body>
         <section data-type="chapter">
@@ -18,20 +11,24 @@
 
                 <p>Link to exercise C: <a href="#ex-C">[link]</a></p>
 
-                <div data-type="note">
+                <div data-type="note" class="link-to-learning">
                     <div data-type="title">Note Title</div>
                     <p>Note body</p>
                     <p>More note body text</p>
                 </div>
                 
-                <div data-type="exercise" id="ex-A">
-                    <span>What is the meaning of life?</span>
-                    <p data-type="solution" id="sol-a">42</p>
-                </div>
-
-                <div data-type="exercise" id="ex-B">
-                    <span>What is the Capitol of France? (this has no solution)</span>
-                </div>
+                <section class="exercises">
+                    <h3 data-type="title">Exercises</h3>
+                    <div data-type="exercise" id="ex-A">
+                        <span>What is the meaning of life?</span>
+                        <p data-type="solution" id="sol-a">42</p>
+                    </div>
+    
+                    <div data-type="exercise" id="ex-B">
+                        <span>What is the Capitol of France? (this has no solution)</span>
+                    </div>
+    
+                </section>
 
             </section>
             <section data-type="page" id="ch1.2">
@@ -42,10 +39,13 @@
                 <p>Lorem ipsum.</p>
                 <p>Lorem ipsum.</p>
 
-                <div data-type="exercise" id="ex-C">
-                    <span>What is the Capitol of Texas?</span>
-                    <p data-type="solution" id="sol-c">Austin</p>
-                </div>
+                <section class="exercises">
+                    <h3 data-type="title">Exercises</h3>
+                    <div data-type="exercise" id="ex-C">
+                        <span>What is the Capitol of Texas?</span>
+                        <p data-type="solution" id="sol-c">Austin</p>
+                    </div>
+                </section>
 
             </section>
         </section>
@@ -56,6 +56,7 @@
 
                 <p>Here is some chapter content.</p>
                 <figure><figcaption>The figure of a Cat</figcaption></figure>
+                <table><tr><td>1-cell table</td></tr><caption>The caption for a 1-cell table</caption></table>
                 <p>Lorem ipsum1.</p>
 
                 <div data-type="exercise" id="ex-D">
@@ -64,6 +65,7 @@
                     <p data-type="solution" id="sol-d">Who?</p>
                 </div>
 
+                <table><tr><td>another 1-cell table</td></tr><caption>The caption for another 1-cell table</caption></table>
                 <p>Lorem ipsum2.</p>
                 <figure><figcaption>The figure of a Hippo</figcaption></figure>
                 <p>Lorem ipsum3.</p>

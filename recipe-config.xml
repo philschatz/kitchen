@@ -1,0 +1,85 @@
+<!-- ***************************************
+     
+# Example Recipe for ACTUAL chemistry-2e
+
+This recipe does the following:
+
+- numbers the chapter and each section
+- moves the exercise sections to the end of the chapter
+- moves the answers to the end of the book
+- numbers each exercise and answer
+- links the answers and exercises to each other
+    - the exercise DOES NOT contain the chapter number
+    - the answer DOES contain the chapter number
+- numbers figures
+- numbers tables according to the recipe config
+- groups exercises by which section they came from
+    - each title links back to the section
+- wraps the note title in a span
+- wraps all the non-title children of a note in an element
+
+*************************************** -->
+<g:root
+    xmlns:g="urn:recipe-config-xml"
+    xmlns:r="urn:replacer-xml"
+    xmlns:h="http://www.w3.org/1999/xhtml">
+
+    <!-- <g:import href="../common-config.xml"/> -->
+
+    <!-- <g:chapter-glossary name="Key Terms"/> -->
+    <g:chapter-page class="key-equations" cluster="NO"  name="Key Equations"/>
+    <g:chapter-page class="summary"       cluster="YES" name="Summary"/>
+    <g:chapter-page class="exercises"     cluster="YES" name="Exercises"/>
+
+
+    <g:book-page-solutions class="solution" cluster="YES" name="Answer Key"/>
+    <!-- <g:index name="Index"/> -->
+
+    <g:note class="link-to-learning" name="Link to Learning"/>
+    <g:note class="sciences-interconnect" name="How Sciences Interconnect"/>
+    <g:note class="chemist-portrait" name="Portrait of a Chemist"/>
+    <g:note class="everyday-life" name="Chemistry in Everyday Life"/>
+
+    <!--
+        "in=" can be CHAPTER_PART, APPENDIX_PART, or ANY_PART
+        "placement=" can be BOTTOM or TOP
+      -->
+    <g:table-caption in="CHAPTER_PART" placement="TOP">
+        <h:span class="os-title-label">Table </h:span>
+        <h:span class="os-number">
+            <r:dump-counter name="chapterCounter"/>.<r:dump-counter name="tableCounter"/>
+        </h:span>
+        <h:span class="os-divider"> </h:span>
+    </g:table-caption>
+
+    <g:figure-caption in="CHAPTER_PART" placement="TOP">
+        <h:span class="os-title-label">Figure </h:span>
+        <h:span class="os-number">
+            <r:dump-counter name="chapterCounter"/>.<r:dump-counter name="figureCounter"/>
+        </h:span>
+        <h:span class="os-divider"> </h:span>
+    </g:figure-caption>
+
+    <!-- <g:example move-to="NONE">
+        <g:title in="ANY_PART">
+            <h:span class="os-title-label">Example </h:span>
+            <h:span class="os-number">
+                <g:use-prefix/>
+                <r:dump-counter name="exampleCounter"/>
+            </h:span>
+        </g:title>
+    </g:example> -->
+
+    <!-- <g:exercise move-to="CHAPTER">
+        <h:span class="os-divider">. </h:span>
+        <h:span class="os-number"><r:dump-counter name="exerciseCounter"/></h:span>
+    </g:exercise> -->
+
+    <!-- <g:chapter outline="Chapter Outline"/> -->
+
+    <!-- <g:custom-list selector=".stepwise" name="stepwise">
+        <g:before>Step</g:before>
+        <g:after>. </g:after>
+    </g:custom-list> -->
+
+</g:root>
