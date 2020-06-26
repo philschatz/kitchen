@@ -157,7 +157,7 @@ XPath functions: https://www.w3.org/TR/xpath-functions-30/
 </xsl:template>
 
 <xsl:template match="g:chapter-page">
-    <div data-type2-because-bug="page" data-uuid-key=".{@class}">
+    <div data-type="page" data-uuid-key=".{@class}">
         <h2>{@name}</h2>
         <xsl:choose>
             <xsl:when test="@cluster='YES'">
