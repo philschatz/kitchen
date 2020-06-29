@@ -56,10 +56,17 @@ XPath functions: https://www.w3.org/TR/xpath-functions-30/
                 </r:declare>
 
                 <r:this>
-                    <h2>Chapter <r:dump-counter name="chapterCounter"/></h2>
                     <r:children/>
                     <xsl:apply-templates select="g:chapter-page | g:chapter-glossary"/>
                 </r:this>
+
+                <r:replace selector="*[@data-type='document-title']">
+                    <r:this>
+                        <span class="os-number">Chapter <r:dump-counter name="chapterCounter"/></span>
+                        <span class="os-divider"> </span>
+                        <span class="os-text"><r:children/></span>
+                    </r:this>
+                </r:replace>
 
                 <xsl:for-each select="g:chapter-page">
                     <r:replace move-to="iamapagebucket-{@class}" selector="/*[@class='{@class}']">

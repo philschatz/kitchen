@@ -194,11 +194,14 @@ XPath functions: https://www.w3.org/TR/xpath-functions-30/
                 <style>
                     /* Debug-styling-to-make-it-easier-to-inspect */
                     :target {{{{ background-color: #ffc; }}}}
+/*
                     section, div, p[data-type="solution"] {{{{
                         border: 1px dotted #ccc;
                         margin: 1rem;
                     }}}}
+*/
                 </style>
+                <link rel="stylesheet" href="stylesheet-pdf.css"/>
             </t:copy>
         </t:template>
 
