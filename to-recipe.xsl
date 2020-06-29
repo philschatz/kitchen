@@ -26,7 +26,7 @@ XPath functions: https://www.w3.org/TR/xpath-functions-30/
 
 <xsl:template match="g:root">
     <r:root>
-        <r:replace selector="h:body">
+        <r:replace selector="h:html/h:body">
             <r:declare>
                 <r:bucket name="solutionBucket"/>
                 <r:counter start-at="1" name="chapterCounter" selector="*[@data-type='chapter']"/>
@@ -62,7 +62,7 @@ XPath functions: https://www.w3.org/TR/xpath-functions-30/
                 </r:this>
 
                 <xsl:for-each select="g:chapter-page">
-                    <r:replace move-to="iamapagebucket-{@class}" selector="*[@class='{@class}']">
+                    <r:replace move-to="iamapagebucket-{@class}" selector="/*[@class='{@class}']">
                         <xsl:comment>TODO: BUG: Unwrap the section and remove the title</xsl:comment>
                         <r:this h:data-todo="UNWRAPME">
                             <r:children selector="node()[not(self::*[@data-type='title'])]"/>
@@ -71,7 +71,7 @@ XPath functions: https://www.w3.org/TR/xpath-functions-30/
                 </xsl:for-each>
 
                 <xsl:if test="g:chapter-glossary">
-                    <r:replace move-to="iamaglossarypagebucket" selector="*[@data-type='glossary']">
+                    <r:replace move-to="iamaglossarypagebucket" selector="/*[@data-type='glossary']">
                         <xsl:comment>TODO: BUG: Unwrap the section and remove the title</xsl:comment>
                         <r:this h:data-todo="UNWRAPME">
                             <r:children selector="node()[not(self::*[@data-type='glossary-title'])]"/>
@@ -80,7 +80,7 @@ XPath functions: https://www.w3.org/TR/xpath-functions-30/
                 </xsl:if>
 
                 <!--Exercise that has a solution-->
-                <r:replace selector="*[@data-type='exercise'][*[@data-type='solution']]">
+                <r:replace selector="/*[@data-type='exercise'][*[@data-type='solution']]">
                     <r:declare>
                         <r:link-text>
                             <r:dump-counter name="chapterCounter"/>.<r:dump-counter name="exerciseCounter"/>
@@ -102,7 +102,7 @@ XPath functions: https://www.w3.org/TR/xpath-functions-30/
                 </r:replace>
 
                 <!--Exercise with no solution-->
-                <r:replace selector="*[@data-type='exercise'][not(*[@data-type='solution'])]">
+                <r:replace selector="/*[@data-type='exercise'][not(*[@data-type='solution'])]">
                     <r:declare>
                         <r:link-text>
                             <r:dump-counter name="chapterCounter"/>.<r:dump-counter name="exerciseCounter"/>
@@ -118,12 +118,12 @@ XPath functions: https://www.w3.org/TR/xpath-functions-30/
                 </r:replace>
 
                 <!--Table-->
-                <r:replace selector="h:table">
+                <r:replace selector="/h:table">
                     <xsl:apply-templates select="g:table-caption[@in='ANY_PART' or @in='CHAPTER_PART']"/>
                 </r:replace>
 
                 <!--Figure-->
-                <r:replace selector="h:figure">
+                <r:replace selector="/h:figure">
                     <xsl:apply-templates select="g:figure-caption[@in='ANY_PART' or @in='CHAPTER_PART']"/>
                 </r:replace>
 
@@ -146,12 +146,27 @@ XPath functions: https://www.w3.org/TR/xpath-functions-30/
 
                     <!-- Add the section number to the title -->
                     <r:replace selector="*[@data-type='document-title']">
-                        <r:this>
-                            <r:dump-counter name="chapterCounter"/>.<r:dump-counter name="sectionCounter"/>: <r:children/>
-                        </r:this>
+                        <h1 data-type="document-title">
+                            <span class="os-text">
+                                <r:dump-counter name="chapterCounter"/>.<r:dump-counter name="sectionCounter"/>: <r:children/>
+                            </span>
+                        </h1>
                     </r:replace>
                 </r:replace>
 
+            </r:replace>
+
+            <!-- Wrap the title with a span for extra styling -->
+            <r:replace selector="*[@data-type='page']" class="preface">
+                <r:this><r:children/></r:this>
+
+                <r:replace selector="*[@data-type='document-title']">
+                    <h1 data-type="document-title">
+                        <span class="os-text">
+                            <r:children/>
+                        </span>
+                    </h1>
+                </r:replace>
             </r:replace>
 
         </r:replace>
@@ -236,7 +251,7 @@ XPath functions: https://www.w3.org/TR/xpath-functions-30/
 </xsl:template>
 
 <xsl:template match="g:note">
-    <r:replace selector="*[@data-type='note']" class="{@class}">
+    <r:replace selector="/*[@data-type='note']" class="{@class}">
         <r:this h:class="os-note {@class}"><!--HACK: Should have a way to append the class-->
             <h:h6 data-type="title" class="os-note-title">{@name}</h:h6>
             <h:div class="os-note-body">

@@ -238,9 +238,14 @@ XPath functions: https://www.w3.org/TR/xpath-functions-30/
         </t:function>
 
         <t:function name="func:hasClass" as="xs:boolean">
-            <t:param name="class" as="xs:string"/>
+            <t:param name="class" as="xs:string?"/>
             <t:param name="className" as="xs:string"/>
-            <t:sequence select="fn:exists(fn:index-of(fn:tokenize($class, '\s+'), $className))"/>
+            <t:choose>
+                <t:when test="empty($class)">{true()}</t:when>
+                <t:otherwise>
+                    <t:sequence select="fn:exists(fn:index-of(fn:tokenize($class, '\s+'), $className))"/>
+                </t:otherwise>
+            </t:choose>
         </t:function>
 
         <!-- <t:function name="temp:addClass" as="xs:string">
@@ -481,8 +486,8 @@ XPath functions: https://www.w3.org/TR/xpath-functions-30/
 <!-- Discard the declaration block. We no longer need it -->
 <xsl:template match="r:declare"/>
 
-<xsl:template name="build-match-with-self"><xsl:for-each select="ancestor::r:replace">//{@selector}<xsl:if test="@class">[@class][func:hasClass(@class, '{@class}')]</xsl:if></xsl:for-each><xsl:if test="@selector">//{@selector}</xsl:if><xsl:if test="@class">[@class][func:hasClass(@class, '{@class}')]</xsl:if></xsl:template>
-<xsl:template name="build-match-ancestors"><xsl:for-each select="ancestor::r:replace">//{@selector}<xsl:if test="@class">[@class][func:hasClass(@class, '{@class}')]</xsl:if></xsl:for-each></xsl:template>
+<xsl:template name="build-match-with-self"><xsl:for-each select="ancestor::r:replace">/{@selector}<xsl:if test="@class">[@class][func:hasClass(@class, '{@class}')]</xsl:if></xsl:for-each><xsl:if test="@selector">/{@selector}</xsl:if><xsl:if test="@class">[@class][func:hasClass(@class, '{@class}')]</xsl:if></xsl:template>
+<xsl:template name="build-match-ancestors"><xsl:for-each select="ancestor::r:replace">/{@selector}<xsl:if test="@class">[@class][func:hasClass(@class, '{@class}')]</xsl:if></xsl:for-each></xsl:template>
 
 <!--Change the namespace of injected elements so that we do not accidentally match on them
     This occurred when we injected new pages into a chapter. We unexpectedly began matching on them

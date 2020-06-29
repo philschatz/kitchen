@@ -168,7 +168,7 @@ To move elements we define the following:
 
 ## Number Exercises
 
-To number exercises, we define a counter and when it increments, and then we dump the value of the counter into the document.
+To number exercises, we define a counter which defines when it resets, a selector that defines when it increments, and then we dump the value of the counter into the document.
 
 ```xml
 <r:replace selector="chapter">
@@ -194,7 +194,7 @@ To number exercises, we define a counter and when it increments, and then we dum
 
 ## Create Linktext
 
-A book defines how links to different elements should appear. For example, links to a table should be `Table 4.3`, links to a chapter should be `Chapter 4` and links to a section should be `4.2 Kinematics`. The framework handles finding the links and looking up the elements, all users have to specify is what text should be used in the link.
+A book defines how links to different elements should appear. For example, links to a table should be `Table 4.3`, links to a chapter should be `Chapter 4` and links to a section should be `4.2 Kinematics`. The framework handles finding the links and looking up the elements. Developers only need to specify what text should be used in the link.
 
 In each case the destination defines what the link should look like:
 
@@ -210,5 +210,5 @@ In each case the destination defines what the link should look like:
         <r:replace>
 
     </r:replace>
-
+</r:replace>
 ```
