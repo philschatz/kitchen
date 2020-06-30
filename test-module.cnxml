@@ -1,0 +1,9 @@
+<document xmlns="http://cnx.rice.edu/cnxml"
+    cnxml-version="0.7" id="testid" module-id="moduleid">
+    <title></title>
+
+    <content>
+    
+        <note id="id1" class="foo"/>
+    </content>
+</document>
