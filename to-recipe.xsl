@@ -138,12 +138,12 @@ XPath functions: https://www.w3.org/TR/xpath-functions-30/
                 <xsl:apply-templates select="g:note"/>
 
                 <!--Section-->
-                <r:replace selector="*[@data-type='page']">
+                <r:replace selector="*[@data-type='page'][not(@class)]">
                     <r:declare>
                         <r:link-text>
                             <!--TODO: Maybe copy-content should somehow squirrel away the original content instead of the expanded content-->
                             <!-- <r:dump-counter name="chapterCounter"/>.<r:dump-counter name="sectionCounter"/>:  -->
-                            <r:copy-content selector="./*[@data-type='document-title']/node()"/>
+                            <r:copy-content selector="*[@data-type='document-title']/node()"/>
                         </r:link-text>
                     </r:declare>
                     
@@ -153,11 +153,35 @@ XPath functions: https://www.w3.org/TR/xpath-functions-30/
 
                     <!-- Add the section number to the title -->
                     <r:replace selector="*[@data-type='document-title']">
-                        <h1 data-type="document-title">
+                        <r:this><!--<h1 data-type="document-title">-->
                             <span class="os-text">
                                 <r:dump-counter name="chapterCounter"/>.<r:dump-counter name="sectionCounter"/>: <r:children/>
                             </span>
-                        </h1>
+                        </r:this>
+                    </r:replace>
+                </r:replace>
+
+                <!-- Introduction (mostly copy/pasta from the non-intro replacer) -->
+                <r:replace selector="*[@data-type='page']" class="introduction">
+                    <r:declare>
+                        <r:link-text>
+                            <r:copy-content selector="*[@data-type='document-title']/node()"/>
+                        </r:link-text>
+                    </r:declare>
+                    
+                    <r:this>
+                        <xsl:if test="g:chapter[@outline]">
+                            <r:chapter-outline name="{g:chapter/@outline}"/>
+                        </xsl:if>
+                        <r:children/>
+                    </r:this>
+
+                    <r:replace selector="*[@data-type='document-title']">
+                        <r:this><!--<h1 data-type="document-title">-->
+                            <span class="os-text">
+                                <r:children/>
+                            </span>
+                        </r:this>
                     </r:replace>
                 </r:replace>
 
@@ -168,11 +192,11 @@ XPath functions: https://www.w3.org/TR/xpath-functions-30/
                 <r:this><r:children/></r:this>
 
                 <r:replace selector="*[@data-type='document-title']">
-                    <h1 data-type="document-title">
+                    <r:this><!--<h1 data-type="document-title">-->
                         <span class="os-text">
                             <r:children/>
                         </span>
-                    </h1>
+                    </r:this>
                 </r:replace>
             </r:replace>
 

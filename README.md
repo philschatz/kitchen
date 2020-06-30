@@ -37,10 +37,12 @@ Each replacer has a selector that matches content and contains 3 sections within
 - [x] show example [code coverage](https://codecov.io/gh/philschatz/sink)
 - [x] show example of mutually exclusive matches (exercise with vs without solution)
     - [ ] error when multiple selectors match an element
+- [x] add `<r:chapter-outline>` element that generates the chapter outline
 - [ ] update the ToC with links to new sections
 - [ ] Index-generation
 - [ ] Use a real `inject:` namespace for injected elements & attribs instead of `inject-`
 - [x] Re-allow tables and figures to create an os-table wrapper. It is breaking the linking right now.
+- [ ] `<r:copy-content>` should squirrel away the values at the beginning instead of at the end
 
 # Prototype
 

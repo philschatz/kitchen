@@ -64,10 +64,10 @@ div.appendix {
 [data-type="equation"] {
   page-break-inside: avoid; }
 
-.introduction > .intro-body > .os-chapter-outline > div.os-chapter-objective > a.os-chapter-objective {
+.introduction > .os-chapter-outline > div.os-chapter-objective > a.os-chapter-objective {
   page-break-after: avoid; }
-  .introduction > .intro-body > .os-chapter-outline > div.os-chapter-objective > a.os-chapter-objective > .os-number,
-  .introduction > .intro-body > .os-chapter-outline > div.os-chapter-objective > a.os-chapter-objective > .os-text {
+  .introduction > .os-chapter-outline > div.os-chapter-objective > a.os-chapter-objective > .os-number,
+  .introduction > .os-chapter-outline > div.os-chapter-objective > a.os-chapter-objective > .os-text {
     page-break-after: avoid; }
 
 * {
@@ -1049,7 +1049,7 @@ a {
 .introduction > .os-figure.has-splash > .os-caption-container > span.os-caption {
   font-family: IBM Plex Sans, sans-serif; }
 
-.introduction > .intro-body > .os-chapter-outline {
+.introduction > .os-chapter-outline {
   width: 6.5in;
   margin: 0 0 1.5rem 0;
   font-family: IBM Plex Sans, sans-serif;
@@ -1061,7 +1061,7 @@ a {
   border-bottom-style: solid;
   box-decoration-break: slice; }
 
-.introduction > .intro-body > .os-chapter-outline > .os-title {
+.introduction > .os-chapter-outline > .os-title {
   margin: 0 0 1.5rem 0;
   font-size: 1.2rem;
   line-height: 1.2rem;
@@ -1072,7 +1072,7 @@ a {
   display: flex;
   flex-direction: row; }
 
-.introduction > .intro-body > .os-chapter-outline > .os-title::after {
+.introduction > .os-chapter-outline > .os-title::after {
   content: '';
   width: 5.20104in;
   border-bottom-width: 0.2rem;
@@ -1083,10 +1083,10 @@ a {
   bottom: 0;
   display: inline-block; }
 
-.introduction > .intro-body > .os-chapter-outline > div.os-chapter-objective {
+.introduction > .os-chapter-outline > div.os-chapter-objective {
   margin-bottom: 0.5rem; }
 
-.introduction > .intro-body > .os-chapter-outline > div.os-chapter-objective > a.os-chapter-objective {
+.introduction > .os-chapter-outline > div.os-chapter-objective > a.os-chapter-objective {
   display: inline-block;
   color: #027EB5;
   font-family: Muli, sans-serif;
@@ -1094,14 +1094,14 @@ a {
   font-size: 1rem;
   margin-bottom: 0.5rem; }
 
-.introduction > .intro-body > .os-chapter-outline > div.os-chapter-objective > .learning-objective > [data-type="abstract"] {
+.introduction > .os-chapter-outline > div.os-chapter-objective > .learning-objective > [data-type="abstract"] {
   margin-left: 1.5rem;
   font-family: Alegreya; }
 
-.introduction > .intro-body > .os-chapter-outline > div.os-chapter-objective > .learning-objective > [data-type="abstract"] > ul {
+.introduction > .os-chapter-outline > div.os-chapter-objective > .learning-objective > [data-type="abstract"] > ul {
   margin-bottom: 0.7rem; }
 
-.introduction > .intro-body > .intro-text > h2[data-type="document-title"]:first-of-type {
+.introduction > .intro-text > h2[data-type="document-title"]:first-of-type {
   float: left;
   font-size: 12px;
   text-transform: uppercase;

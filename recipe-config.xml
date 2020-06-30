@@ -75,7 +75,7 @@ This recipe does the following:
         <h:span class="os-number"><r:dump-counter name="exerciseCounter"/></h:span>
     </g:exercise> -->
 
-    <!-- <g:chapter outline="Chapter Outline"/> -->
+    <g:chapter outline="Chapter Outline"/>
 
     <!-- <g:custom-list selector=".stepwise" name="stepwise">
         <g:before>Step</g:before>

@@ -107,13 +107,23 @@ XPath functions: https://www.w3.org/TR/xpath-functions-30/
         <t:template mode="LINK_MODE" match="h:a[starts-with(@href, '#')]">
             <t:variable name="targetId" select="substring-after(@href, '#')"/>
             <t:variable name="target" select="key('link-target', $targetId)"/>
-            <t:if test="not($target)">
-                <t:message terminate="yes">BUG: Could not find link target with id="{{$targetId}}". Maybe it was removed?</t:message>
-                <t:text>[[UNKNOWN-LINK-TARGET]]</t:text>
-            </t:if>
+            <t:variable name="newText">
+                <t:choose>
+                    <t:when test="string-length($target[1]/@temp:linktext) > 0">
+                        <t:value-of select="$target[1]/@temp:linktext"/>
+                    </t:when>
+                    <t:when test="not($target)">
+                        <t:message terminate="yes">BUG: Could not find link target with id="{{$targetId}}". Maybe it was removed?</t:message>
+                    </t:when>
+                    <t:otherwise>
+                        <t:sequence select="node()"/>
+                        [[could not find autogenerate text]]
+                    </t:otherwise>
+                </t:choose>
+            </t:variable>
             <t:copy inherit-namespaces="no">
                 <t:apply-templates mode="LINK_MODE" select="@*"/>
-                <t:value-of select="$target[1]/@temp:linktext"/>
+                <t:sequence select="$newText"/>
             </t:copy>
         </t:template>
 
@@ -271,6 +281,9 @@ XPath functions: https://www.w3.org/TR/xpath-functions-30/
 
     <t:template mode="ANNOTATE_MODE" match="{$matchString}">
         <t:copy inherit-namespaces="no">
+            <t:if test="@temp:replace-id">
+                <t:message>This element was already matched by a different selector @temp:replace-id={{@temp:replace-id}}</t:message>
+            </t:if>
             <t:attribute name="temp:replace-id">{$templateId}</t:attribute>
             <t:apply-templates mode="ANNOTATE_MODE" select="@*|node()"/>
         </t:copy>
@@ -311,11 +324,15 @@ XPath functions: https://www.w3.org/TR/xpath-functions-30/
         <t:copy>
             <t:apply-templates mode="NUMBER_MODE" select="@*"/>
             <t:if test="r:link-text/node()">
-                <t:attribute name="temp:linktext">
+                <t:variable name="linktextValue">
                     <t:apply-templates mode="NUMBER_MODE" select="r:link-text/node()">
                         <t:with-param tunnel="yes" name="nearestReplacerContext" select="."/>
                     </t:apply-templates>
-                </t:attribute>
+                </t:variable>
+                <t:if test="not(string-length($linktextValue) > 0)">
+                    <t:message terminate="yes">Computed link text for element is empty. The nodes were: [<t:copy-of select="r:link-text"/>]</t:message>
+                </t:if>
+                <t:attribute name="temp:linktext">{{$linktextValue}}</t:attribute>
             </t:if>
             <xsl:call-template name="applyAllChildren">
                 <xsl:with-param tunnel="yes" name="currentMode">NUMBER_MODE</xsl:with-param>
@@ -389,6 +406,10 @@ XPath functions: https://www.w3.org/TR/xpath-functions-30/
     <xsl:variable name="id" select="generate-id()"/>
     <t:template mode="NUMBER_MODE" match="r:copy-content[@temp:id='COPY_CONTENT_{@name}_{$id}']">
         <t:param tunnel="yes" name="nearestReplacerContext" as="element()"/>
+        <t:variable name="nodesToCopy" select="$nearestReplacerContext/{@selector}"/>
+        <t:if test="empty($nodesToCopy)">
+            <t:message terminate="yes">ERROR: Could not find anything to copy when selecting "{@selector}". inside r:copy-content for 'COPY_CONTENT_{@name}_{$id}'. nearestReplacerContext is a @data-type="{{$nearestReplacerContext/@data-type}}" id="{{$nearestReplacerContext/@id}}" class="{{$nearestReplacerContext/@class}}".</t:message>
+        </t:if>
         <t:apply-templates mode="NUMBER_MODE" select="$nearestReplacerContext/{@selector}"/>
     </t:template>
 </xsl:template>
@@ -451,6 +472,18 @@ XPath functions: https://www.w3.org/TR/xpath-functions-30/
             </t:choose>
         </t:for-each>
     </t:template>
+</xsl:template>
+
+<xsl:template match="r:chapter-outline">
+    <h:div class="os-chapter-outline">
+        <h:div class="os-title">{@name}</h:div>
+
+        <t:for-each select="../*[@data-type='page']">
+            <h:div class="os-chapter-objective">
+                <h:a href="#{{temp:getId(.)}}">[this-will-be-replaced-with-autogen-linktext]</h:a>
+            </h:div>
+        </t:for-each>
+    </h:div>
 </xsl:template>
 
 <!--We have to hardcode the selector because XSLT Home Edition does not support dynamic selectors-->
