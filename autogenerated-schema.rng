@@ -18,6 +18,7 @@
           <value>everyday-life</value>
         </choice>
       </attribute>
+      <!--copied from cnxml-defs.rng but using common-attribute-noclass-->
       <ref name="display-block-default-attribute"/>
       <ref name="common-attributes-noclass"/>
       <ref name="id-attribute"/>
