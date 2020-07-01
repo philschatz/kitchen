@@ -7,26 +7,27 @@
       <ref name="document"/>
     </choice>
   </start>
-  <include href="common-schema/cnxml-common-jing.rng"/>
-  <define name="block-note">
-    <element name="note">
-      <attribute name="class">
-        <choice>
-          <value>link-to-learning</value>
-          <value>sciences-interconnect</value>
-          <value>chemist-portrait</value>
-          <value>everyday-life</value>
-        </choice>
-      </attribute>
-      <!--copied from cnxml-defs.rng but using common-attribute-noclass-->
-      <ref name="display-block-default-attribute"/>
-      <ref name="common-attributes-noclass"/>
-      <ref name="id-attribute"/>
-      <ref name="note-type-attribute"/>
-      <optional>
-        <ref name="label"/>
-      </optional>
-      <ref name="div-content"/>
-    </element>
-  </define>
+  <include href="../../openstax/cnxml/cnxml/xml/cnxml/schema/rng/0.7/cnxml-common-jing.rng">
+    <define name="block-note">
+      <element name="note">
+        <attribute name="class">
+          <choice>
+            <value>link-to-learning</value>
+            <value>sciences-interconnect</value>
+            <value>chemist-portrait</value>
+            <value>everyday-life</value>
+          </choice>
+        </attribute>
+        <!--copied from cnxml-defs.rng but using common-attribute-noclass-->
+        <ref name="display-block-default-attribute"/>
+        <ref name="common-attributes-noclass"/>
+        <ref name="id-attribute"/>
+        <ref name="note-type-attribute"/>
+        <optional>
+          <ref name="label"/>
+        </optional>
+        <ref name="div-content"/>
+      </element>
+    </define>
+  </include>
 </grammar>
